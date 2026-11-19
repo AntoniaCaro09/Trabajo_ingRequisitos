@@ -105,22 +105,5 @@ document.addEventListener('change',e=>{
 document.addEventListener('input',e=>{
   if(e.target.id==='fq'){fq=e.target.value;const p=e.target.selectionStart;render();const i=$('#fq');i.focus();i.setSelectionRange(p,p)}
 });
-const USERS=[
- {mail:'supervisor@planta.cl',pass:'super123',nombre:'Roberto Morales',rol:'supervisor',etq:'Supervisor de mantenimiento'},
- {mail:'jefatura@planta.cl',pass:'jefe123',nombre:'Elena Rivera',rol:'jefatura',etq:'Jefatura de planta'},
- {mail:'tecnico@planta.cl',pass:'tec123',nombre:'Juan Valenzuela',rol:'tecnico',etq:'Técnico de mantenimiento'}];
-$('#lf').addEventListener('submit',e=>{
-  e.preventDefault();
-  const u=USERS.find(x=>x.mail===$('#em').value.trim().toLowerCase()&&x.pass===$('#pw').value),er=$('#lerr');
-  if(!u){er.textContent='Correo o contraseña incorrectos. Revisa los datos e intenta de nuevo.';return}
-  if(u.rol==='tecnico'){er.textContent='Tu perfil trabaja desde la app móvil. Esta web es solo para supervisión y jefatura.';return}
-  er.textContent='';
-  document.body.className='es-'+u.rol;
-  $('#uname').textContent=u.nombre;$('#urol').textContent=u.etq;
-  vista='panel';msg='';
-  $('#login').hidden=true;$('.app').hidden=false;render();
-});
-$('#salir').addEventListener('click',()=>{
-  $('#dlg').close();$('.app').hidden=true;$('#login').hidden=false;
-  $('#lf').reset();$('#lerr').textContent='';document.body.className='';
-});
+$('#rol').addEventListener('change',e=>{document.body.className='es-'+e.target.value});
+render();

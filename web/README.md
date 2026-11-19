@@ -1,6 +1,7 @@
 # Panel web – App Mantenimiento Planta
 
 Prototipo web para supervisores y jefatura (datos de ejemplo, sin base de datos todavía).
+No tiene inicio de sesión: la vista se cambia con el selector "Ver como" del menú lateral.
 
 ## Cómo abrirlo en Visual Studio Code
 1. Abre la carpeta `web` en VS Code (Archivo > Abrir carpeta).
@@ -9,12 +10,7 @@ Prototipo web para supervisores y jefatura (datos de ejemplo, sin base de datos 
 
 Necesita internet para cargar la fuente Inter y la librería de códigos QR.
 
-## Cuentas de prueba
-- supervisor@planta.cl / super123
-- jefatura@planta.cl / jefe123
-- tecnico@planta.cl / tec123 (rechazado: usa la app móvil)
-
 ## Estructura
 - `index.html`: estructura de la página
 - `css/styles.css`: estilos (paleta Industrial Field Ops)
-- `js/app.js`: pantallas, login simulado y datos de ejemplo
+- `js/app.js`: pantallas y datos de ejemplo

@@ -8,22 +8,14 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <link rel="stylesheet" href="css/styles.css">
 </head>
-<body>
-<section id="login"><form id="lf" class="lbox">
-<h1>Mantenimiento Planta</h1><p class="sub">Ingresa con tu cuenta de supervisor o de jefatura.</p>
-<label for="em">Correo</label><input id="em" type="email" autocomplete="username" required>
-<label for="pw">Contraseña</label><input id="pw" type="password" autocomplete="current-password" required>
-<p class="msg err" id="lerr" role="alert"></p>
-<button class="btn acc" type="submit">Iniciar sesión</button>
-<p class="sub demo">Cuentas de prueba:<br>supervisor@planta.cl con super123<br>jefatura@planta.cl con jefe123<br>tecnico@planta.cl con tec123 (el técnico es rechazado: solo usa la app móvil)</p>
-</form></section>
-<div class="app" hidden>
+<body class="es-supervisor">
+<div class="app">
 <aside>
   <div class="logo">Mantenimiento Planta<small>Panel de gestión</small></div>
   <button class="nav" data-v="panel" aria-current="page">Panel</button>
   <button class="nav" data-v="ot">Reportes y OT</button>
   <button class="nav" data-v="activos">Activos</button>
-  <div class="rol"><b id="uname"></b><br><span id="urol"></span><button class="btn out" id="salir" type="button" style="margin-top:10px;width:100%">Cerrar sesión</button></div>
+  <div class="rol"><label for="rol">Ver como</label><select id="rol"><option value="supervisor">Supervisor</option><option value="jefatura">Jefatura</option></select></div>
 </aside>
 <main id="main"></main>
 </div>

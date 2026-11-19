@@ -58,11 +58,5 @@ dialog input{width:100%}
 .jef{display:none}.es-jefatura .jef{display:revert}
 .es-jefatura .kpi.jef{display:block}
 [hidden]{display:none!important}
-#login{min-height:100vh;display:grid;place-items:center;padding:20px}
-.lbox{width:min(400px,100%);background:var(--sf);border:1px solid var(--ln);border-top:4px solid var(--acc);border-radius:10px;padding:28px}
-.lbox label{display:block;margin:14px 0 2px;font-size:14px}
-.lbox input{width:100%}
-.lbox .btn{margin-top:6px;width:100%}
-.demo{font-size:13px;margin:16px 0 0}
 @media (max-width:820px){.app{grid-template-columns:1fr}aside{flex-direction:row;flex-wrap:wrap;align-items:center;padding:12px}.logo{padding:0 10px 0 0}.rol{margin:0;border:0;padding:0;flex:1 1 100%}main{padding:18px 14px}.two{grid-template-columns:1fr}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
