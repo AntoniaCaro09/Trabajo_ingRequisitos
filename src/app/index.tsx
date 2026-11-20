@@ -1,6 +1,9 @@
-import { View, Text, StyleSheet, ScrollView, StatusBar } from "react-native";
+import { View, Text, StyleSheet, ScrollView, StatusBar, Pressable } from "react-native";
+import { useRouter } from "expo-router";
 
 export default function HomeScreen() {
+  const router = useRouter();
+
   return (
     <ScrollView style={styles.container}>
       <StatusBar barStyle="light-content" />
@@ -17,12 +20,13 @@ export default function HomeScreen() {
       <View style={styles.content}>
         <Text style={styles.sectionTitle}>Panel principal</Text>
 
-        <View style={styles.card}>
-          <Text style={styles.cardTitle}>Activos industriales</Text>
+        <Pressable style={styles.card} onPress={() => router.push("/explore")}
+          accessibilityRole="button" accessibilityLabel="Abrir inventario de activos industriales">
+          <Text style={styles.cardTitle}>Activos industriales  ›</Text>
           <Text style={styles.cardDescription}>
-            Consulta y administra los equipos de planta.
+            Toca aquí para consultar y buscar los equipos de planta.
           </Text>
-        </View>
+        </Pressable>
 
         <View style={styles.card}>
           <Text style={styles.cardTitle}>Reportes de fallas</Text>

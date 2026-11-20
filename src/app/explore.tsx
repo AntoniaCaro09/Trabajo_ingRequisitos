@@ -1,180 +1,120 @@
-import { Image } from 'expo-image';
-import { SymbolView } from 'expo-symbols';
-import { Platform, Pressable, ScrollView, StyleSheet } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useMemo, useState } from "react";
+import {
+  Modal,
+  Pressable,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
+import { Activo, activosEjemplo } from "@/data/activos";
 
-import { ExternalLink } from '@/components/external-link';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { Collapsible } from '@/components/ui/collapsible';
-import { WebBadge } from '@/components/web-badge';
-import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
-import { useTheme } from '@/hooks/use-theme';
+export default function ActivosScreen() {
+  const [busqueda, setBusqueda] = useState("");
+  const [seleccionado, setSeleccionado] = useState<Activo | null>(null);
 
-export default function TabTwoScreen() {
-  const safeAreaInsets = useSafeAreaInsets();
-  const insets = {
-    ...safeAreaInsets,
-    bottom: safeAreaInsets.bottom + BottomTabInset + Spacing.three,
-  };
-  const theme = useTheme();
-
-  const contentPlatformStyle = Platform.select({
-    android: {
-      paddingTop: insets.top,
-      paddingLeft: insets.left,
-      paddingRight: insets.right,
-      paddingBottom: insets.bottom,
-    },
-    web: {
-      paddingTop: Spacing.six,
-      paddingBottom: Spacing.four,
-    },
-  });
+  // Filtra los equipos cuando se escribe en el buscador.
+  const resultados = useMemo(() => {
+    const texto = busqueda.trim().toLocaleLowerCase();
+    if (!texto) return activosEjemplo;
+    return activosEjemplo.filter((activo) =>
+      [activo.nombre, activo.id, activo.area, activo.ubicacion]
+        .some((valor) => valor.toLocaleLowerCase().includes(texto))
+    );
+  }, [busqueda]);
 
   return (
-    <ScrollView
-      style={[styles.scrollView, { backgroundColor: theme.background }]}
-      contentInset={insets}
-      contentContainerStyle={[styles.contentContainer, contentPlatformStyle]}>
-      <ThemedView style={styles.container}>
-        <ThemedView style={styles.titleContainer}>
-          <ThemedText type="subtitle">Explore</ThemedText>
-          <ThemedText style={styles.centerText} themeColor="textSecondary">
-            This starter app includes example{'\n'}code to help you get started.
-          </ThemedText>
-
-          <ExternalLink href="https://docs.expo.dev" asChild>
-            <Pressable style={({ pressed }) => pressed && styles.pressed}>
-              <ThemedView type="backgroundElement" style={styles.linkButton}>
-                <ThemedText type="link">Expo documentation</ThemedText>
-                <SymbolView
-                  tintColor={theme.text}
-                  name={{ ios: 'arrow.up.right.square', android: 'link', web: 'link' }}
-                  size={12}
-                />
-              </ThemedView>
+    <SafeAreaView style={styles.pantalla}>
+      <ScrollView contentContainerStyle={styles.contenido} keyboardShouldPersistTaps="handled">
+        <Text style={styles.titulo}>Activos industriales</Text>
+        <Text style={styles.subtitulo}>
+          Busca una máquina y toca su tarjeta para ver la ficha técnica.
+        </Text>
+        <TextInput
+          style={styles.buscador}
+          placeholder="Buscar nombre, código o área..."
+          placeholderTextColor="#64748B"
+          value={busqueda}
+          onChangeText={setBusqueda}
+          autoCapitalize="none"
+          accessibilityLabel="Buscar activos"
+        />
+        <Text style={styles.contador}>{resultados.length} equipo(s) encontrado(s)</Text>
+        {resultados.map((activo) => (
+          <Pressable
+            key={activo.id}
+            style={styles.tarjeta}
+            onPress={() => setSeleccionado(activo)}
+            accessibilityRole="button"
+            accessibilityLabel={`Ver ficha de ${activo.nombre}`}
+          >
+            <View style={styles.fila}>
+              <Text style={styles.codigo}>{activo.id}</Text>
+              <Text style={[styles.estado, activo.estado === "Operativo" ? styles.verde : activo.estado === "Detenido" ? styles.rojo : styles.amarillo]}>
+                {activo.estado}
+              </Text>
+            </View>
+            <Text style={styles.nombre}>{activo.nombre}</Text>
+            <Text style={styles.detalle}>{activo.area} · {activo.ubicacion}</Text>
+            <Text style={styles.ver}>Ver ficha ›</Text>
+          </Pressable>
+        ))}
+        {resultados.length === 0 && (
+          <Text style={styles.vacio}>No hay máquinas que coincidan con tu búsqueda.</Text>
+        )}
+        <Text style={styles.aviso}>
+          DEMOSTRACIÓN: los equipos son datos de ejemplo. Aún no se guardan en SQLite ni se sincronizan con el servidor.
+        </Text>
+      </ScrollView>
+      <Modal visible={seleccionado !== null} transparent animationType="fade" onRequestClose={() => setSeleccionado(null)}>
+        <View style={styles.fondoModal}>
+          <View style={styles.modal}>
+            <Text style={styles.modalTitulo}>Ficha del equipo</Text>
+            {seleccionado && (
+              <>
+                <Text style={styles.nombre}>{seleccionado.nombre}</Text>
+                <Text style={styles.modalDato}>Código: {seleccionado.id}</Text>
+                <Text style={styles.modalDato}>Área: {seleccionado.area}</Text>
+                <Text style={styles.modalDato}>Ubicación: {seleccionado.ubicacion}</Text>
+                <Text style={styles.modalDato}>Estado: {seleccionado.estado}</Text>
+                <Text style={styles.modalDato}>Descripción: {seleccionado.descripcion}</Text>
+              </>
+            )}
+            <Pressable style={styles.botonCerrar} onPress={() => setSeleccionado(null)} accessibilityRole="button">
+              <Text style={styles.botonTexto}>Cerrar ficha</Text>
             </Pressable>
-          </ExternalLink>
-        </ThemedView>
-
-        <ThemedView style={styles.sectionsWrapper}>
-          <Collapsible title="File-based routing">
-            <ThemedText type="small">
-              This app has two screens: <ThemedText type="code">src/app/index.tsx</ThemedText> and{' '}
-              <ThemedText type="code">src/app/explore.tsx</ThemedText>
-            </ThemedText>
-            <ThemedText type="small">
-              The layout file in <ThemedText type="code">src/app/_layout.tsx</ThemedText> sets up
-              the tab navigator.
-            </ThemedText>
-            <ExternalLink href="https://docs.expo.dev/router/introduction">
-              <ThemedText type="linkPrimary">Learn more</ThemedText>
-            </ExternalLink>
-          </Collapsible>
-
-          <Collapsible title="Android, iOS, and web support">
-            <ThemedView type="backgroundElement" style={styles.collapsibleContent}>
-              <ThemedText type="small">
-                You can open this project on Android, iOS, and the web. To open the web version,
-                press <ThemedText type="smallBold">w</ThemedText> in the terminal running this
-                project.
-              </ThemedText>
-              <Image
-                source={require('@/assets/images/tutorial-web.png')}
-                style={styles.imageTutorial}
-              />
-            </ThemedView>
-          </Collapsible>
-
-          <Collapsible title="Images">
-            <ThemedText type="small">
-              For static images, you can use the <ThemedText type="code">@2x</ThemedText> and{' '}
-              <ThemedText type="code">@3x</ThemedText> suffixes to provide files for different
-              screen densities.
-            </ThemedText>
-            <Image source={require('@/assets/images/react-logo.png')} style={styles.imageReact} />
-            <ExternalLink href="https://reactnative.dev/docs/images">
-              <ThemedText type="linkPrimary">Learn more</ThemedText>
-            </ExternalLink>
-          </Collapsible>
-
-          <Collapsible title="Light and dark mode components">
-            <ThemedText type="small">
-              This template has light and dark mode support. The{' '}
-              <ThemedText type="code">useColorScheme()</ThemedText> hook lets you inspect what the
-              user&apos;s current color scheme is, and so you can adjust UI colors accordingly.
-            </ThemedText>
-            <ExternalLink href="https://docs.expo.dev/develop/user-interface/color-themes/">
-              <ThemedText type="linkPrimary">Learn more</ThemedText>
-            </ExternalLink>
-          </Collapsible>
-
-          <Collapsible title="Animations">
-            <ThemedText type="small">
-              This template includes an example of an animated component. The{' '}
-              <ThemedText type="code">src/components/ui/collapsible.tsx</ThemedText> component uses
-              the powerful <ThemedText type="code">react-native-reanimated</ThemedText> library to
-              animate opening this hint.
-            </ThemedText>
-          </Collapsible>
-        </ThemedView>
-        {Platform.OS === 'web' && <WebBadge />}
-      </ThemedView>
-    </ScrollView>
+          </View>
+        </View>
+      </Modal>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  scrollView: {
-    flex: 1,
-  },
-  contentContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-  },
-  container: {
-    maxWidth: MaxContentWidth,
-    flexGrow: 1,
-  },
-  titleContainer: {
-    gap: Spacing.three,
-    alignItems: 'center',
-    paddingHorizontal: Spacing.four,
-    paddingVertical: Spacing.six,
-  },
-  centerText: {
-    textAlign: 'center',
-  },
-  pressed: {
-    opacity: 0.7,
-  },
-  linkButton: {
-    flexDirection: 'row',
-    paddingHorizontal: Spacing.four,
-    paddingVertical: Spacing.two,
-    borderRadius: Spacing.five,
-    justifyContent: 'center',
-    gap: Spacing.one,
-    alignItems: 'center',
-  },
-  sectionsWrapper: {
-    gap: Spacing.five,
-    paddingHorizontal: Spacing.four,
-    paddingTop: Spacing.three,
-  },
-  collapsibleContent: {
-    alignItems: 'center',
-  },
-  imageTutorial: {
-    width: '100%',
-    aspectRatio: 296 / 171,
-    borderRadius: Spacing.three,
-    marginTop: Spacing.two,
-  },
-  imageReact: {
-    width: 100,
-    height: 100,
-    alignSelf: 'center',
-  },
+  pantalla: { flex: 1, backgroundColor: "#F1F4F8" },
+  contenido: { padding: 20, paddingBottom: 90 },
+  titulo: { fontSize: 27, fontWeight: "bold", color: "#142B45", marginTop: 22 },
+  subtitulo: { color: "#64748B", marginTop: 8, fontSize: 15, marginBottom: 18 },
+  buscador: { backgroundColor: "#FFFFFF", borderColor: "#CBD5E1", borderWidth: 1, borderRadius: 12, paddingHorizontal: 15, paddingVertical: 14, fontSize: 16, color: "#142B45" },
+  contador: { color: "#64748B", fontSize: 13, marginVertical: 14 },
+  tarjeta: { backgroundColor: "#FFFFFF", padding: 18, borderRadius: 12, marginBottom: 12, borderLeftWidth: 4, borderLeftColor: "#F59E0B" },
+  fila: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", gap: 8 },
+  codigo: { color: "#475569", fontSize: 13, fontWeight: "600" },
+  estado: { fontSize: 11, paddingVertical: 5, paddingHorizontal: 8, borderRadius: 8, overflow: "hidden" },
+  verde: { backgroundColor: "#DCFCE7", color: "#166534" },
+  amarillo: { backgroundColor: "#FEF3C7", color: "#92400E" },
+  rojo: { backgroundColor: "#FEE2E2", color: "#991B1B" },
+  nombre: { fontSize: 19, fontWeight: "bold", color: "#142B45", marginTop: 10 },
+  detalle: { color: "#64748B", marginTop: 6, fontSize: 14 },
+  ver: { color: "#0369A1", fontWeight: "600", marginTop: 11 },
+  vacio: { padding: 18, textAlign: "center", color: "#64748B" },
+  aviso: { color: "#64748B", fontSize: 12, marginTop: 14, lineHeight: 18 },
+  fondoModal: { flex: 1, backgroundColor: "#00000099", justifyContent: "center", padding: 24 },
+  modal: { backgroundColor: "#FFFFFF", borderRadius: 16, padding: 24 },
+  modalTitulo: { color: "#64748B", fontSize: 14, fontWeight: "600" },
+  modalDato: { color: "#334155", fontSize: 15, marginTop: 12 },
+  botonCerrar: { backgroundColor: "#142B45", padding: 15, borderRadius: 10, marginTop: 24, alignItems: "center" },
+  botonTexto: { color: "#FFFFFF", fontWeight: "bold", fontSize: 16 },
 });
