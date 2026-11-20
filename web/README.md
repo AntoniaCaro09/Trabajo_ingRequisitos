@@ -1,16 +1,22 @@
 # Panel web – App Mantenimiento Planta
 
-Prototipo web para supervisores y jefatura (datos de ejemplo, sin base de datos todavía).
-No tiene inicio de sesión: la vista se cambia con el selector "Ver como" del menú lateral.
+Panel para supervisores y jefatura. Sin inicio de sesión: la vista se cambia con "Ver como".
+Sin configurar nada funciona con datos de ejemplo (el menú dice "Datos de ejemplo").
 
-## Cómo abrirlo en Visual Studio Code
-1. Abre la carpeta `web` en VS Code (Archivo > Abrir carpeta).
-2. Instala la extensión **Live Server** (Ritwick Dey).
-3. Clic derecho en `index.html` > **Open with Live Server**.
+## Abrirlo
+Abre la carpeta `web` en VS Code, instala la extensión **Live Server** y haz clic derecho en `index.html` > Open with Live Server.
+Necesita internet (fuente Inter, códigos QR y librería de Supabase).
 
-Necesita internet para cargar la fuente Inter y la librería de códigos QR.
+## Conectarlo a la base de datos (Supabase, PostgreSQL)
+1. Crear el proyecto en supabase.com y ejecutar en el SQL Editor los scripts de `database/schema` en orden (001 a 025).
+2. Completar `js/config.js`: `SUPABASE_URL`, `SUPABASE_ANON_KEY` (solo la llave pública) y `USUARIO_ID` (id de un usuario supervisor o administrador, creador de las OT).
+3. Habilitar en Supabase políticas de acceso (Row Level Security) para leer `equipos`, `reportes_anomalias`, `ordenes_trabajo`, `areas` y `usuarios`, y para insertar en `equipos` y `ordenes_trabajo`. Sin políticas, las listas aparecen vacías.
+4. La lista de técnicos sale de los usuarios activos con el rol `TECNICO` (en `usuario_roles` o en `usuario_empresa_roles`). Hay que asignar ese rol a los técnicos y permitir su lectura (y la de `roles`) en las políticas.
+5. Nunca subir a GitHub la llave `service_role`.
 
 ## Estructura
 - `index.html`: estructura de la página
 - `css/styles.css`: estilos (paleta Industrial Field Ops)
-- `js/app.js`: pantallas y datos de ejemplo
+- `js/config.js`: datos de conexión
+- `js/datos.js`: único archivo que habla con la base (consultas y datos de ejemplo)
+- `js/app.js`: pantallas
