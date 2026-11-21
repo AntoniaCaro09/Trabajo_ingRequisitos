@@ -1,0 +1,332 @@
+<!DOCTYPE html><html class="h-full" lang="es"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"><meta content="mobile_tab" name="shell-type"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "tertiary-container": "#3e2400", "on-secondary": "#ffffff", "secondary": "#455f87", "on-error-container": "#93000a", "inverse-primary": "#b2c8e9", "surface-dim": "#cbdbf5", "on-tertiary-fixed-variant": "#653e00", "on-primary-fixed": "#031c36", "secondary-fixed-dim": "#adc8f5", "secondary-container": "#b5d0fd", "on-secondary-container": "#3e5980", "tertiary-fixed": "#ffddb8", "on-surface-variant": "#43474d", "on-primary-fixed-variant": "#334863", "on-secondary-fixed-variant": "#2d486d", "surface-container-high": "#dce9ff", "error-container": "#ffdad6", "primary": "#00162e", "on-background": "#0b1c30", "surface-bright": "#f8f9ff", "surface-container-low": "#eff4ff", "surface-container": "#e5eeff", "inverse-surface": "#213145", "primary-container": "#142b45", "outline": "#74777e", "on-error": "#ffffff", "surface-variant": "#d3e4fe", "tertiary-fixed-dim": "#ffb95f", "secondary-fixed": "#d5e3ff", "on-tertiary-fixed": "#2a1700", "on-primary-container": "#7d93b2", "on-surface": "#0b1c30", "primary-fixed": "#d3e4ff", "primary-fixed-dim": "#b2c8e9", "surface-tint": "#4a607c", "surface": "#f8f9ff", "surface-container-lowest": "#ffffff", "on-primary": "#ffffff", "surface-container-highest": "#d3e4fe", "background": "#f8f9ff", "on-tertiary": "#ffffff", "tertiary": "#221200", "on-tertiary-container": "#ca8100", "outline-variant": "#c4c6ce", "inverse-on-surface": "#eaf1ff", "on-secondary-fixed": "#001c3b", "error": "#ba1a1a" }, "borderRadius": { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" }, "spacing": { "space-sm": "0.5rem", "margin": "1rem", "space-lg": "1.5rem", "space-xl": "2rem", "gutter": "1rem", "space-xs": "0.25rem", "space-md": "1rem" }, "fontFamily": { "headline-lg": ["Inter"], "label-lg": ["Inter"], "headline-sm": ["Inter"], "body-lg": ["Inter"], "label-sm": ["Inter"], "label-md": ["Inter"], "body-md": ["Inter"], "headline-md": ["Inter"], "body-sm": ["Inter"], "headline-lg-mobile": ["Inter"], "label-code": ["Inter"] }, "fontSize": { "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "700" }], "label-lg": ["16px", { "lineHeight": "20px", "fontWeight": "600" }], "headline-sm": ["18px", { "lineHeight": "24px", "fontWeight": "600" }], "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "500" }], "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "700" }], "label-md": ["14px", { "lineHeight": "18px", "fontWeight": "600" }], "body-md": ["15px", { "lineHeight": "22px", "fontWeight": "400" }], "headline-md": ["22px", { "lineHeight": "28px", "fontWeight": "600" }], "body-sm": ["13px", { "lineHeight": "18px", "fontWeight": "400" }], "headline-lg-mobile": ["26px", { "lineHeight": "34px", "fontWeight": "700" }], "label-code": ["13px", { "lineHeight": "16px", "fontWeight": "600" }] } } } }</script><style>@layer base{html,body{width:100%;margin:0;padding:0;min-height:100%;}body{overscroll-behavior-y:none;-webkit-tap-highlight-color:transparent;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head><body class="bg-background text-on-surface font-body-md min-h-screen flex flex-col antialiased selection:bg-secondary-container"><header class="fixed top-0 w-full z-50 pt-safe bg-surface/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-16 px-margin flex items-center justify-between gap-space-sm"><div class="flex items-center gap-space-sm min-w-0"><div class="w-10 h-10 rounded-xl bg-primary-container flex items-center justify-center shrink-0 shadow-[0_1px_4px_rgba(20,43,69,0.12)]"><span class="material-symbols-outlined text-secondary-fixed text-[22px]">precision_manufacturing</span></div><div class="flex flex-col min-w-0"><span class="font-label-md text-label-md text-primary tracking-tight truncate leading-tight">ADMINISTRACIÓN DE ACTIVOS</span><span class="font-body-sm text-body-sm text-on-surface-variant truncate leading-none">Catálogo Maestro &amp; Trazabilidad</span></div></div><div class="flex items-center gap-space-sm shrink-0"><div class="h-7 px-2.5 rounded-full bg-surface-container flex items-center gap-1.5 shadow-[0_1px_3px_rgba(0,0,0,0.02)]"><span class="w-2 h-2 rounded-full bg-[#16A34A] animate-pulse shrink-0"></span><span class="font-label-sm text-label-sm text-on-surface-variant whitespace-nowrap">En línea · Sincronizado</span></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="flex-1 w-full bg-surface pt-16 pb-24 flex flex-col"><div class="flex flex-col w-full px-margin pb-28 gap-space-md">
+<!-- Operational Context Header -->
+<section class="flex flex-col gap-1 mt-space-sm">
+<div class="flex items-center justify-between">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px]">badge</span>
+        Perfil 06 · Maestro de Activos
+      </span>
+<span class="font-label-code text-label-code text-on-surface-variant bg-surface-container px-2 py-0.5 rounded">REV-2024.4</span>
+</div>
+<div class="flex flex-col">
+<h2 class="font-headline-sm text-headline-sm text-on-surface tracking-tight">Patricia Lagos</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-primary">domain</span>
+        Catálogo Maestro de Planta · División Maquinaria
+      </p>
+</div>
+</section>
+<!-- Big Hero Action Card: Register New Industrial Asset -->
+<section class="w-full">
+<div class="w-full bg-primary text-on-primary rounded-xl p-space-md shadow-md flex flex-col gap-3 relative overflow-hidden">
+<div class="absolute -right-6 -bottom-6 w-28 h-28 rounded-full bg-surface-tint/20 pointer-events-none"></div>
+<div class="flex items-start justify-between">
+<div class="w-12 h-12 rounded-xl bg-surface-container-high/20 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-secondary-fixed text-[28px]" style="font-variation-settings: 'FILL' 1;">add_box</span>
+</div>
+<div class="flex items-center gap-1 px-2 py-1 rounded bg-secondary-container/20 text-secondary-fixed text-label-sm font-label-sm">
+<span class="material-symbols-outlined text-[14px]">verified_user</span>
+          Control Anti-Duplicado
+        </div>
+</div>
+<div class="flex flex-col gap-1 z-10">
+<h3 class="font-headline-sm text-headline-sm text-white tracking-tight leading-snug">Registrar Nuevo Activo Industrial</h3>
+<p class="font-body-sm text-body-sm text-surface-variant">Generación de ID único normado, serialización, nivel de criticidad y pre-asignación QR física.</p>
+</div>
+<button class="w-full h-[52px] mt-1 bg-surface-container-lowest text-primary rounded-xl font-label-lg text-label-lg flex items-center justify-center gap-2 shadow-sm active:scale-[0.98] transition-transform" id="btn-open-register" type="button">
+<span class="material-symbols-outlined text-[20px]">qr_code_scanner</span>
+        Iniciar Alta de Equipo
+      </button>
+</div>
+</section>
+<!-- Anti-duplicate Fast Verification Input -->
+<section class="w-full flex flex-col gap-2.5"><div class="relative flex items-center w-full"><span class="material-symbols-outlined absolute left-3.5 text-on-surface-variant text-[22px] pointer-events-none">search</span><input class="w-full h-[52px] pl-11 pr-11 bg-surface-container-lowest rounded-xl font-body-md text-body-md text-on-surface placeholder:text-outline shadow-sm focus:outline-none focus:bg-surface-container-low transition-colors" id="asset-search-input" placeholder="Buscar por ID, N° serie o marbete..." type="text"><button class="absolute right-2 w-9 h-9 flex items-center justify-center text-on-surface-variant active:text-primary" type="button" title="Filtros avanzados"><span class="material-symbols-outlined text-[20px]">tune</span></button></div><div class="flex items-center gap-1.5 overflow-y-auto pb-0.5"><span class="text-[11px] font-label-sm text-on-surface-variant shrink-0">Áreas:</span><button type="button" class="px-2.5 py-1 rounded-full bg-primary text-on-primary font-label-sm text-label-sm shrink-0 shadow-sm">Todas</button><button type="button" class="px-2.5 py-1 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm shrink-0 active:bg-surface-variant">Soplado</button><button type="button" class="px-2.5 py-1 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm shrink-0 active:bg-surface-variant">Compresores</button><button type="button" class="px-2.5 py-1 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm shrink-0 active:bg-surface-variant">Calderas</button><button type="button" class="px-2.5 py-1 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm shrink-0 active:bg-surface-variant">Envasado</button></div><div class="flex items-center justify-between px-1"><span class="font-label-sm text-label-sm text-on-surface-variant">Algoritmo de unicidad activo</span><span class="font-label-code text-label-code text-secondary flex items-center gap-0.5"><span class="material-symbols-outlined text-[13px]">fingerprint</span>Prefix [EQ-PL-XXXX]</span></div></section>
+<!-- Metrics Bento Grid (3 concise metrics) -->
+<section class="w-full grid grid-cols-3 gap-2">
+<div class="bg-surface-container-lowest p-3 rounded-xl shadow-sm flex flex-col justify-between gap-2 min-h-[92px]">
+<div class="flex items-center justify-between">
+<span class="w-7 h-7 rounded-lg bg-surface-container-high flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-[16px]">inventory_2</span>
+</span>
+<span class="material-symbols-outlined text-on-surface-variant text-[14px]">analytics</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-primary tracking-tight">142</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant truncate">Activos Registrados</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-3 rounded-xl shadow-sm flex flex-col justify-between gap-2 min-h-[92px]">
+<div class="flex items-center justify-between">
+<span class="w-7 h-7 rounded-lg bg-error-container flex items-center justify-center">
+<span class="material-symbols-outlined text-error text-[16px]">priority_high</span>
+</span>
+<span class="font-label-code text-label-code text-error">CLASE A</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-on-error-container tracking-tight">18</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant truncate">Críticos Clase A</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-3 rounded-xl shadow-sm flex flex-col justify-between gap-2 min-h-[92px]">
+<div class="flex items-center justify-between">
+<span class="w-7 h-7 rounded-lg bg-secondary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-on-secondary-container text-[16px]">qr_code_2</span>
+</span>
+<span class="material-symbols-outlined text-secondary text-[14px]">done_all</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-primary tracking-tight">100%</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant truncate">Vinculados QR</span>
+</div>
+</div>
+</section>
+<!-- Quick Action: QR In-Field Audit -->
+<section class="w-full grid grid-cols-2 gap-2"><div class="bg-surface-container-high rounded-xl p-3 flex flex-col justify-between gap-2 shadow-sm"><div class="flex items-center gap-2"><div class="w-9 h-9 rounded-lg bg-primary text-on-primary flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-[20px]">history_edu</span></div><div class="flex flex-col min-w-0"><span class="font-label-md text-label-md text-primary tracking-tight truncate">Historial Activos</span><span class="text-[11px] font-body-sm text-on-surface-variant truncate">Altas, bajas y traslados</span></div></div><button class="h-8 px-2.5 bg-surface-container-lowest text-primary rounded-lg font-label-sm text-label-sm flex items-center justify-center gap-1 active:scale-95 transition-transform shadow-sm" type="button"><span>Consultar Log</span><span class="material-symbols-outlined text-[14px]">arrow_forward</span></button></div><div class="bg-surface-container-high rounded-xl p-3 flex flex-col justify-between gap-2 shadow-sm"><div class="flex items-center gap-2"><div class="w-9 h-9 rounded-lg bg-secondary text-on-secondary flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-[20px]">qr_code_scanner</span></div><div class="flex flex-col min-w-0"><span class="font-label-md text-label-md text-primary tracking-tight truncate">Auditoría QR</span><span class="text-[11px] font-body-sm text-on-surface-variant truncate">Lectura e integridad</span></div></div><button class="h-8 px-2.5 bg-primary text-on-primary rounded-lg font-label-sm text-label-sm flex items-center justify-center gap-1 active:scale-95 transition-transform shadow-sm" type="button"><span>Auditar Terreno</span><span class="material-symbols-outlined text-[14px]">arrow_forward</span></button></div></section>
+<!-- Master Catalog Recent / Audit Pending Section -->
+<section class="w-full flex flex-col gap-2.5">
+<div class="flex items-center justify-between px-1"><div class="flex items-center gap-2"><span class="material-symbols-outlined text-primary text-[20px]">edit_document</span><h3 class="font-label-lg text-label-lg text-on-surface">Editar Ficha Técnica · Recientes o Pendientes</h3></div><span class="font-label-code text-label-code text-on-surface-variant">2 Equipos</span></div>
+<!-- Asset Item 1: Extrusora EX-01 -->
+<article class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex flex-col gap-3">
+<div class="flex items-start justify-between gap-2">
+<div class="flex gap-3 min-w-0">
+<div class="w-14 h-14 rounded-xl overflow-hidden shrink-0 bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="Close-up photograph of a heavy industrial blow molding plastics extruder machine with steel barrel and temperature control wiring inside a clean manufacturing facility with natural ambient lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDORHI3X5MTp75hZITgnSIqg-rCTqtlogMMhgb15C2kf402kjmGZI_TO01FBRDdINyZ1JoR-8FSwuQNxg72AHIwT3aOH0fv7h6gb18fdU09_fBdFUdfnDjlT5vRDnFTdvcMNy2UJCZ0waDx3UYxThfA7zf9g-cjW8CF6Oo1aknN4285kcyfLE4XnDoEQplrdJ0lNcAb0_Qjst4zXiCLU1iM3NyjMxD8t3-yMuC2Fpnn">
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-2">
+<span class="font-label-code text-label-code text-primary bg-surface-container px-2 py-0.5 rounded">EQ-EXT-01-A</span>
+</div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface truncate">Extrusora EX-01</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate">Marca: Kautex · Área Soplado</p>
+</div>
+</div>
+<div class="flex flex-col items-end gap-1 shrink-0">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-error-container text-on-error-container font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[12px]">warning</span>
+            Alta (Clase A)
+          </span>
+<span class="inline-flex items-center gap-1 text-[11px] font-label-code text-[#15803D]">
+<span class="w-1.5 h-1.5 rounded-full bg-[#16A34A]"></span>
+            QR activo
+          </span>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-2 bg-surface-container-low p-2.5 rounded-xl font-body-sm text-body-sm">
+<div class="flex flex-col">
+<span class="text-on-surface-variant text-[11px]">Serie Fab:</span>
+<span class="font-label-code text-label-code text-on-surface truncate">KTX-2019-9941</span>
+</div>
+<div class="flex flex-col">
+<span class="text-on-surface-variant text-[11px]">Token QR Físico:</span>
+<span class="font-label-code text-label-code text-primary truncate">QR-BLOW-EX01-SEC</span>
+</div>
+</div>
+<div class="flex items-center gap-2 pt-1">
+<button class="flex-1 h-10 rounded-xl bg-surface-container text-primary font-label-md text-label-md flex items-center justify-center gap-1 active:bg-surface-variant transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">edit_note</span>
+          Editar Ficha
+        </button>
+<button class="w-10 h-10 rounded-xl bg-surface-container text-primary flex items-center justify-center active:bg-surface-variant transition-colors" title="Ver código QR" type="button">
+<span class="material-symbols-outlined text-[20px]">qr_code</span>
+</button>
+<button class="w-10 h-10 rounded-xl bg-surface-container text-primary flex items-center justify-center active:bg-surface-variant transition-colors" title="Historial trazabilidad" type="button">
+<span class="material-symbols-outlined text-[20px]">history</span>
+</button>
+</div>
+</article>
+<!-- Asset Item 2: Compresor Atlas C-03 -->
+<article class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex flex-col gap-3">
+<div class="flex items-start justify-between gap-2">
+<div class="flex gap-3 min-w-0">
+<div class="w-14 h-14 rounded-xl overflow-hidden shrink-0 bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="Industrial rotary screw air compressor in soundproof acoustic cabinet situated in a clean utilities mechanical room with pressure dials visible." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD1RyIRMJPWWdq-2uoL_xjdG1nnsMZ6lC-ASMsJlGJ-uNb-m5ABFWGHwSuuxRCULD3PIGZM9rZqpdB5GJOKaggzSPYxNm7w-zO5TjMZwLIoogkPmIJpjIWFAWQeNZWtEG0qDGiAiVGFDqducoBdfLYDFqAlkuTJtHj4PEFcYzKM4byK_NNV1NMwK6TnYpkj51MU4vNEsr2VnITunZ2WG_qXet8vMBsEoR_vU7lTylZG">
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-2">
+<span class="font-label-code text-label-code text-primary bg-surface-container px-2 py-0.5 rounded">EQ-CMP-03-B</span>
+</div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface truncate">Compresor Atlas C-03</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate">Marca: Atlas Copco · Sala Compresores</p>
+</div>
+</div>
+<div class="flex flex-col items-end gap-1 shrink-0">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-tertiary-fixed text-on-tertiary-fixed-variant font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[12px]">info</span>
+            Media
+          </span>
+<span class="inline-flex items-center gap-1 text-[11px] font-label-code text-[#15803D]">
+<span class="w-1.5 h-1.5 rounded-full bg-[#16A34A]"></span>
+            QR activo
+          </span>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-2 bg-surface-container-low p-2.5 rounded-xl font-body-sm text-body-sm">
+<div class="flex flex-col">
+<span class="text-on-surface-variant text-[11px]">Serie Fab:</span>
+<span class="font-label-code text-label-code text-on-surface truncate">AC-GA55-40812</span>
+</div>
+<div class="flex flex-col">
+<span class="text-on-surface-variant text-[11px]">Token QR Físico:</span>
+<span class="font-label-code text-label-code text-primary truncate">QR-AIR-CMP03-LOC</span>
+</div>
+</div>
+<div class="flex items-center gap-2 pt-1">
+<button class="flex-1 h-10 rounded-xl bg-surface-container text-primary font-label-md text-label-md flex items-center justify-center gap-1 active:bg-surface-variant transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">edit_note</span>
+          Editar Ficha
+        </button>
+<button class="w-10 h-10 rounded-xl bg-surface-container text-primary flex items-center justify-center active:bg-surface-variant transition-colors" title="Ver código QR" type="button">
+<span class="material-symbols-outlined text-[20px]">qr_code</span>
+</button>
+<button class="w-10 h-10 rounded-xl bg-surface-container text-primary flex items-center justify-center active:bg-surface-variant transition-colors" title="Historial trazabilidad" type="button">
+<span class="material-symbols-outlined text-[20px]">history</span>
+</button>
+</div>
+</article>
+</section>
+<!-- Modal / Drawer: New Asset Onboarding (Simulated inline responsive sheet) -->
+<div class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-end justify-center p-0" id="register-modal">
+<div class="w-full max-w-lg bg-surface-container-lowest rounded-t-2xl p-space-md flex flex-col gap-4 max-h-[795px] overflow-y-auto shadow-2xl">
+<div class="flex items-center justify-between pb-2 border-b-0">
+<div class="flex items-center gap-2">
+<span class="w-8 h-8 rounded-lg bg-primary-container text-on-primary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">domain_add</span>
+</span>
+<div class="flex flex-col">
+<span class="font-label-lg text-label-lg text-on-surface">Alta en Catálogo Maestro</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Prevención de IDs duplicados</span>
+</div>
+</div>
+<button class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant" id="btn-close-register" type="button">
+<span class="material-symbols-outlined text-[20px]">close</span>
+</button>
+</div>
+<form class="flex flex-col gap-3" onsubmit="event.preventDefault();">
+<div class="flex flex-col gap-1">
+<label class="font-label-sm text-label-sm text-on-surface-variant">ID Único Sugerido (Norma ISO 14224)</label>
+<div class="flex items-center gap-2">
+<input class="flex-1 h-[48px] px-3 bg-surface-container font-label-code text-label-code text-primary rounded-xl" readonly="" type="text" value="EQ-MOT-04-A">
+<button class="h-[48px] px-3 bg-secondary-container text-on-secondary-container rounded-xl font-label-sm text-label-sm flex items-center gap-1" type="button">
+<span class="material-symbols-outlined text-[16px]">refresh</span>
+              Regenerar
+            </button>
+</div>
+<span class="font-label-sm text-label-sm text-[#15803D] flex items-center gap-1 mt-0.5">
+<span class="material-symbols-outlined text-[14px]">check_circle</span>
+            Código disponible · Cero coincidencias en base central
+          </span>
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-label-sm text-label-sm text-on-surface-variant">Nombre Técnico del Equipo</label>
+<input class="h-[48px] px-3 bg-surface-container-low rounded-xl font-body-md text-body-md text-on-surface focus:outline-none" placeholder="Ej. Bomba Centrífuga Multietapa" type="text">
+</div>
+<div class="grid grid-cols-2 gap-2">
+<div class="flex flex-col gap-1">
+<label class="font-label-sm text-label-sm text-on-surface-variant">Marca</label>
+<input class="h-[48px] px-3 bg-surface-container-low rounded-xl font-body-md text-body-md text-on-surface focus:outline-none" placeholder="Ej. Siemens / Flowserve" type="text">
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-label-sm text-label-sm text-on-surface-variant">N° Serie Fabr.</label>
+<input class="h-[48px] px-3 bg-surface-container-low rounded-xl font-label-code text-label-code text-on-surface focus:outline-none" placeholder="Ej. SN-8921-X" type="text">
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-label-sm text-label-sm text-on-surface-variant">Clasificación de Criticidad</label>
+<div class="grid grid-cols-3 gap-2">
+<label class="h-[44px] rounded-xl bg-error-container text-on-error-container font-label-sm text-label-sm flex items-center justify-center gap-1 cursor-pointer">
+<input checked="" class="accent-error" name="criticidad" type="radio" value="A">
+              Clase A
+            </label>
+<label class="h-[44px] rounded-xl bg-tertiary-fixed text-on-tertiary-fixed-variant font-label-sm text-label-sm flex items-center justify-center gap-1 cursor-pointer">
+<input class="accent-tertiary" name="criticidad" type="radio" value="B">
+              Clase B
+            </label>
+<label class="h-[44px] rounded-xl bg-surface-container text-on-surface-variant font-label-sm text-label-sm flex items-center justify-center gap-1 cursor-pointer">
+<input name="criticidad" type="radio" value="C">
+              Clase C
+            </label>
+</div>
+</div>
+<div class="flex flex-col gap-1 bg-surface-container p-3 rounded-xl">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-primary flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">qr_code_scanner</span>
+              Vincular Código QR Físico
+            </span>
+<span class="font-label-code text-label-code text-on-surface-variant">Requerido</span>
+</div>
+<button class="h-[44px] mt-1 bg-primary text-on-primary rounded-xl font-label-md text-label-md flex items-center justify-center gap-2" type="button">
+<span class="material-symbols-outlined text-[18px]">photo_camera</span>
+            Escanear Etiqueta Nueva
+          </button>
+</div>
+<div class="flex items-center gap-2 pt-2">
+<button class="w-1/3 h-[52px] bg-surface-container text-on-surface font-label-md text-label-md rounded-xl" id="btn-cancel-modal" type="button">
+            Cancelar
+          </button>
+<button class="w-2/3 h-[52px] bg-primary text-on-primary font-label-lg text-label-lg rounded-xl flex items-center justify-center gap-1" type="submit">
+<span class="material-symbols-outlined text-[20px]">save</span>
+            Guardar en Catálogo
+          </button>
+</div>
+</form>
+</div>
+</div>
+</div>
+<!-- Exclusive Asset Admin Floating Tabbar Overlay -->
+<nav class="fixed bottom-0 left-0 w-full bg-surface/95 backdrop-blur-xl border-t-0 shadow-[0_-2px_12px_rgba(0,0,0,0.08)] pb-safe z-50">
+<div class="h-16 px-space-sm flex items-center justify-around">
+<!-- Tab 1: Inicio (Activo) -->
+<a class="flex flex-col items-center justify-center min-w-[56px] min-h-[48px] py-1 text-primary" href="#">
+<span class="material-symbols-outlined text-[24px]" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<span class="font-label-sm text-label-sm tracking-tight font-semibold">Inicio</span>
+</a>
+<!-- Tab 2: Activos (Catálogo) -->
+<a class="flex flex-col items-center justify-center min-w-[56px] min-h-[48px] py-1 text-on-surface-variant hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-[24px]">precision_manufacturing</span>
+<span class="font-label-sm text-label-sm tracking-tight">Activos</span>
+</a>
+<!-- Tab 3: Registrar Activo (Destacado central) -->
+<button class="flex flex-col items-center justify-center min-w-[56px] min-h-[48px] py-1 text-on-surface-variant hover:text-primary transition-colors" id="tab-btn-register" type="button">
+<div class="w-7 h-7 rounded-lg bg-primary text-on-primary flex items-center justify-center shadow-sm">
+<span class="material-symbols-outlined text-[18px]">add</span>
+</div>
+<span class="font-label-sm text-label-sm tracking-tight mt-0.5">Registrar</span>
+</button>
+<!-- Tab 4: Configuración Maestro -->
+<a class="flex flex-col items-center justify-center min-w-[56px] min-h-[48px] py-1 text-on-surface-variant hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-[24px]">tune</span>
+<span class="font-label-sm text-label-sm tracking-tight">Configuración</span>
+</a>
+</div>
+</nav>
+<script>
+  (function() {
+    const registerModal = document.getElementById('register-modal');
+    const openBtn = document.getElementById('btn-open-register');
+    const tabRegisterBtn = document.getElementById('tab-btn-register');
+    const closeBtn = document.getElementById('btn-close-register');
+    const cancelModalBtn = document.getElementById('btn-cancel-modal');
+
+    function showModal() {
+      if (registerModal) registerModal.classList.remove('hidden');
+    }
+
+    function hideModal() {
+      if (registerModal) registerModal.classList.add('hidden');
+    }
+
+    if (openBtn) openBtn.addEventListener('click', showModal);
+    if (tabRegisterBtn) tabRegisterBtn.addEventListener('click', showModal);
+    if (closeBtn) closeBtn.addEventListener('click', hideModal);
+    if (cancelModalBtn) cancelModalBtn.addEventListener('click', hideModal);
+  })();
+</script></main>
+
+<span id="PING_CONTENT_PUSH_NOTIFICATION" style="display: none;"></span></body></html>

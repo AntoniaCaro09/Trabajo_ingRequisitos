@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+
+<html lang="es"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><meta content="mobile_tab" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "on-secondary-fixed-variant": "#2d486d", "background": "#f8f9ff", "primary": "#00162e", "on-primary-fixed": "#031c36", "on-tertiary-fixed": "#2a1700", "secondary-fixed-dim": "#adc8f5", "surface-dim": "#cbdbf5", "surface-tint": "#4a607c", "inverse-on-surface": "#eaf1ff", "surface-container-lowest": "#ffffff", "on-background": "#0b1c30", "secondary-container": "#b5d0fd", "surface": "#f8f9ff", "outline-variant": "#c4c6ce", "tertiary-fixed-dim": "#ffb95f", "surface-container-high": "#dce9ff", "tertiary-container": "#3e2400", "surface-container": "#e5eeff", "on-secondary": "#ffffff", "on-primary-fixed-variant": "#334863", "error": "#ba1a1a", "on-surface": "#0b1c30", "on-secondary-fixed": "#001c3b", "primary-fixed-dim": "#b2c8e9", "inverse-surface": "#213145", "on-primary-container": "#7d93b2", "primary-fixed": "#d3e4ff", "surface-container-highest": "#d3e4fe", "inverse-primary": "#b2c8e9", "on-tertiary-fixed-variant": "#653e00", "on-error-container": "#93000a", "surface-bright": "#f8f9ff", "secondary": "#455f87", "outline": "#74777e", "on-surface-variant": "#43474d", "on-tertiary-container": "#ca8100", "secondary-fixed": "#d5e3ff", "on-tertiary": "#ffffff", "error-container": "#ffdad6", "on-secondary-container": "#3e5980", "surface-variant": "#d3e4fe", "on-primary": "#ffffff", "primary-container": "#142b45", "surface-container-low": "#eff4ff", "tertiary-fixed": "#ffddb8", "on-error": "#ffffff", "tertiary": "#221200" }, borderRadius: { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" }, spacing: { "gutter": "1rem", "space-md": "1rem", "margin": "1rem", "space-sm": "0.5rem", "space-xs": "0.25rem", "space-xl": "2rem", "space-lg": "1.5rem" }, fontFamily: { "body-sm": ["Inter"], "label-code": ["Inter"], "body-md": ["Inter"], "label-lg": ["Inter"], "label-md": ["Inter"], "headline-sm": ["Inter"], "label-sm": ["Inter"], "body-lg": ["Inter"], "headline-md": ["Inter"], "headline-lg": ["Inter"], "headline-lg-mobile": ["Inter"] }, fontSize: { "body-sm": ["13px", { "lineHeight": "18px", "fontWeight": "400" }], "label-code": ["13px", { "lineHeight": "16px", "fontWeight": "600" }], "body-md": ["15px", { "lineHeight": "22px", "fontWeight": "400" }], "label-lg": ["16px", { "lineHeight": "20px", "fontWeight": "600" }], "label-md": ["14px", { "lineHeight": "18px", "fontWeight": "600" }], "headline-sm": ["18px", { "lineHeight": "24px", "fontWeight": "600" }], "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "700" }], "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "500" }], "headline-md": ["22px", { "lineHeight": "28px", "fontWeight": "600" }], "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "700" }], "headline-lg-mobile": ["26px", { "lineHeight": "34px", "fontWeight": "700" }] } } } };</script><style>@layer base { html, body { width: 100%; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; } body { overscroll-behavior-y: none; } .pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); } .pt-safe { padding-top: env(safe-area-inset-top, 0px); } } ::-webkit-scrollbar { display: none; }</style></head><body class="bg-surface font-body-md text-on-surface antialiased flex flex-col min-h-screen"><header class="fixed top-0 w-full z-50 pt-safe bg-surface/85 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-16 px-margin flex items-center justify-between gap-space-sm"><div class="flex items-center gap-space-sm min-w-0 flex-1"><h1 class="font-headline-sm text-headline-sm text-on-surface truncate">Rondas Inspección</h1><div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-secondary-container/40 text-on-secondary-container shrink-0"><span class="w-2 h-2 rounded-full bg-emerald-600"></span><span class="font-label-code text-label-code uppercase tracking-wider">En Línea</span></div></div><div class="flex items-center gap-space-sm shrink-0"><button aria-label="Cambiar Turno u Operador" class="w-11 h-11 flex items-center justify-center rounded-lg bg-surface-container-low text-on-surface-variant hover:text-on-surface hover:bg-surface-container active:scale-95 transition-all"><span class="material-symbols-outlined text-[20px]">sync_alt</span></button><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="flex-1 flex flex-col relative w-full pt-16 pb-20 bg-surface px-margin"><div class="flex flex-col w-full pb-6 space-y-space-md">
+<!-- Supervisor ID & Quick Shift Summary -->
+<section class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm relative overflow-hidden">
+<div class="flex items-start gap-space-md">
+<div class="relative shrink-0">
+<img class="w-16 h-16 rounded-xl object-cover bg-surface-container" data-alt="Close up portrait of a senior Latin industrial maintenance supervisor wearing a clean white hardhat, protective glasses, and high-visibility navy work gear, warm industrial ambient lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCV-mlESPm0uIQfRes-x-3-DvkH6OGb4zW0RW4JCIZB57m9yEINi4zdosABgThFi11LMG5LoxgVPoCeitvHkgTvp4hml7pvw8iz-JwyJwG8bFKGcvoC4zq_CWLV-U7I5qvFVZeuXGi3n9dAblElMWBcTszmgMvL7p88BkcFswPQHHlf7iEI0yKv_FI3QsrqsPBCPFKiLR2qVFup3fRVXWCYGC7ctoGlKxf9GOF_WNFE"/>
+<span class="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 rounded-full flex items-center justify-center ring-2 ring-white">
+<span class="w-2 h-2 rounded-full bg-white animate-pulse"></span>
+</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center gap-1.5 mb-0.5">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary px-1.5 py-0.5 rounded bg-secondary-container/40">SUP-704</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">• Turno A (07:00 - 15:30)</span>
+</div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface truncate">Roberto Morales</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate flex items-center gap-1 mt-0.5">
+<span class="material-symbols-outlined text-[16px] text-secondary">factory</span>
+          Planta Concentradora &amp; Procesos
+        </p>
+</div>
+</div>
+<!-- Real-time Shift KPI Pills -->
+<div class="grid grid-cols-3 gap-2 mt-4 pt-3 bg-surface-container-low rounded-lg p-2.5">
+<div class="flex flex-col items-center justify-center text-center p-1 bg-surface-container-lowest rounded">
+<span class="font-headline-sm text-headline-sm text-amber-600 font-bold">04</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant mt-0.5 line-clamp-1">Por Asignar</span>
+</div>
+<div class="flex flex-col items-center justify-center text-center p-1 bg-surface-container-lowest rounded">
+<span class="font-headline-sm text-headline-sm text-secondary font-bold">06</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant mt-0.5 line-clamp-1">En Curso</span>
+</div>
+<div class="flex flex-col items-center justify-center text-center p-1 bg-surface-container-lowest rounded">
+<span class="font-headline-sm text-headline-sm text-emerald-700 font-bold">08</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant mt-0.5 line-clamp-1">Técnicos Disp.</span>
+</div>
+</div>
+</section>
+<!-- Emergency Dispatch Fast Action -->
+<section class="bg-primary text-on-primary rounded-xl p-space-md shadow-sm relative overflow-hidden">
+<div class="flex items-center justify-between gap-3">
+<div class="flex items-center gap-3 min-w-0">
+<div class="w-10 h-10 rounded-lg bg-error flex items-center justify-center text-on-error shrink-0">
+<span class="material-symbols-outlined text-[24px]">e911_emergency</span>
+</div>
+<div class="min-w-0">
+<h3 class="font-label-lg text-label-lg text-on-primary truncate">Asignación Rápida</h3>
+<p class="font-body-sm text-body-sm text-on-primary-container truncate">Cuadrilla de emergencia lista</p>
+</div>
+</div>
+<button class="px-3.5 py-2.5 rounded-lg bg-surface-container-lowest text-primary font-label-md text-label-md hover:bg-surface-container active:scale-95 transition-all shrink-0" id="btn-emergency">
+        Despachar
+      </button>
+</div>
+</section>
+<!-- Navigation Hub Module -->
+<section class="bg-surface-container-lowest rounded-xl p-space-sm shadow-sm">
+<div class="px-space-sm pt-2 pb-1 flex items-center justify-between">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant">Hub de Coordinación</span>
+<span class="font-label-code text-label-code text-secondary">6 MÓDULOS</span>
+</div>
+<div class="space-y-1 mt-1">
+<!-- 1. Dashboard -->
+<a class="flex items-center justify-between p-3 rounded-lg hover:bg-surface-container-low transition-colors group" href="#">
+<div class="flex items-center gap-3 min-w-0">
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-on-primary transition-colors">
+<span class="material-symbols-outlined text-[20px]">dashboard</span>
+</div>
+<div class="min-w-0">
+<h4 class="font-label-md text-label-md text-on-surface">Dashboard de Supervisión</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate">Vista consolidada y pulso del turno</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-[20px] text-outline">chevron_right</span>
+</a>
+<!-- 2. Bandeja de Fallas -->
+<a class="flex items-center justify-between p-3 rounded-lg bg-surface-container-low/60 hover:bg-surface-container-low transition-colors group" href="#">
+<div class="flex items-center gap-3 min-w-0">
+<div class="w-10 h-10 rounded-lg bg-amber-100 text-amber-800 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[20px]">notification_important</span>
+</div>
+<div class="min-w-0">
+<div class="flex items-center gap-2">
+<h4 class="font-label-md text-label-md text-on-surface truncate">Bandeja de Reportes de Falla</h4>
+<span class="px-2 py-0.5 rounded-full bg-error text-on-error font-label-sm text-label-sm">4 Nuevas</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate">Anomalías reportadas en campo</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-[20px] text-outline">chevron_right</span>
+</a>
+<!-- 3. Tablero OTs -->
+<a class="flex items-center justify-between p-3 rounded-lg hover:bg-surface-container-low transition-colors group" href="#">
+<div class="flex items-center gap-3 min-w-0">
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-on-primary transition-colors">
+<span class="material-symbols-outlined text-[20px]">pending_actions</span>
+</div>
+<div class="min-w-0">
+<div class="flex items-center gap-2">
+<h4 class="font-label-md text-label-md text-on-surface truncate">Tablero de Órdenes (OTs)</h4>
+<span class="px-1.5 py-0.2 rounded bg-surface-container-high text-on-surface-variant font-label-code text-label-code">18 Total</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate">Abiertas, en curso, finalizadas y por validar</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-[20px] text-outline">chevron_right</span>
+</a>
+<!-- 4. Gestión de Cuadrillas -->
+<a class="flex items-center justify-between p-3 rounded-lg hover:bg-surface-container-low transition-colors group" href="#">
+<div class="flex items-center gap-3 min-w-0">
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-on-primary transition-colors">
+<span class="material-symbols-outlined text-[20px]">groups</span>
+</div>
+<div class="min-w-0">
+<h4 class="font-label-md text-label-md text-on-surface truncate">Gestión de Técnicos y Cuadrillas</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate">Cuadrilla A (Mecánica) • Cuadrilla B (Eléctrica)</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-[20px] text-outline">chevron_right</span>
+</a>
+<!-- 5. Estado de Activos -->
+<a class="flex items-center justify-between p-3 rounded-lg hover:bg-surface-container-low transition-colors group" href="#">
+<div class="flex items-center gap-3 min-w-0">
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-on-primary transition-colors">
+<span class="material-symbols-outlined text-[20px]">precision_manufacturing</span>
+</div>
+<div class="min-w-0">
+<h4 class="font-label-md text-label-md text-on-surface truncate">Estado Operacional de Activos</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate">Operativos, en detención y fuera de servicio</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-[20px] text-outline">chevron_right</span>
+</a>
+<!-- 6. Indicadores MTTR -->
+<a class="flex items-center justify-between p-3 rounded-lg hover:bg-surface-container-low transition-colors group" href="#">
+<div class="flex items-center gap-3 min-w-0">
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-on-primary transition-colors">
+<span class="material-symbols-outlined text-[20px]">analytics</span>
+</div>
+<div class="min-w-0">
+<div class="flex items-center gap-2">
+<h4 class="font-label-md text-label-md text-on-surface truncate">Indicadores de Mantenimiento</h4>
+<span class="text-emerald-700 font-label-code text-label-code">MTTR 1.4h</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate">Resumen de cumplimiento del turno</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-[20px] text-outline">chevron_right</span>
+</a>
+</div>
+</section>
+<!-- Operational Filters & Tools -->
+<section class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm space-y-3">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant">Filtro Rápido de Área</span>
+<span class="font-body-sm text-body-sm text-secondary font-medium">Restablecer</span>
+</div>
+<!-- Area filter pills with gloved touch ergonomics -->
+<div class="flex gap-2 overflow-x-auto pb-1">
+<button class="px-3.5 py-2 rounded-lg bg-primary text-on-primary font-label-sm text-label-sm shrink-0 shadow-sm">
+        Todas (6)
+      </button>
+<button class="px-3.5 py-2 rounded-lg bg-surface-container text-on-surface-variant font-label-sm text-label-sm shrink-0 active:bg-surface-container-highest">
+        Líneas 1-4
+      </button>
+<button class="px-3.5 py-2 rounded-lg bg-surface-container text-on-surface-variant font-label-sm text-label-sm shrink-0 active:bg-surface-container-highest">
+        Molienda SAG
+      </button>
+<button class="px-3.5 py-2 rounded-lg bg-surface-container text-on-surface-variant font-label-sm text-label-sm shrink-0 active:bg-surface-container-highest">
+        Servicios Aux.
+      </button>
+</div>
+<!-- Active Plant Status Summary Widget -->
+<div class="p-3 rounded-lg bg-surface-container-low flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-emerald-600"></span>
+<span class="font-body-sm text-body-sm text-on-surface font-medium">Disponibilidad Global: 94.2%</span>
+</div>
+<span class="font-label-code text-label-code text-on-surface-variant">PLANTA ACTIVA</span>
+</div>
+</section>
+<!-- Demo Role Switcher & System Session -->
+<section class="space-y-2 pt-1">
+<div class="bg-surface-container-low rounded-xl p-3 flex items-center justify-between">
+<div class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-[20px] text-secondary">switch_account</span>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface">Simulador de Roles</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Alternar perfil de demostración</span>
+</div>
+</div>
+<select class="bg-surface-container-lowest text-on-surface font-label-md text-label-md px-3 py-1.5 rounded-lg border-0 focus:ring-0">
+<option selected="">Supervisor (Turno A)</option>
+<option>Técnico Mecánico</option>
+<option>Técnico Eléctrico</option>
+<option>Jefe de Planta</option>
+</select>
+</div>
+<button class="w-full h-12 flex items-center justify-center gap-2 rounded-lg bg-error-container text-on-error-container font-label-lg text-label-lg active:scale-[0.99] transition-all">
+<span class="material-symbols-outlined text-[20px]">logout</span>
+      Finalizar Turno / Cerrar Sesión
+    </button>
+<p class="text-center font-label-code text-label-code text-outline pt-1">
+      CMMS MOBILE v4.12 • NODO INDUSTRIAL NORTE
+    </p>
+</section>
+</div>
+<script>
+  // Simple reactive touch feedback for quick prototype demonstration
+  document.getElementById('btn-emergency')?.addEventListener('click', function() {
+    alert('Despacho de emergencia activado: Notificando a Líder de Cuadrilla A.');
+  });
+</script></main><nav class="fixed bottom-0 w-full z-50 pb-safe bg-surface/85 backdrop-blur-xl shadow-[0_-2px_12px_rgba(0,0,0,0.05)]" data-active-classes="text-primary font-bold bg-surface-container-highest/60"><div class="h-16 px-space-xs flex items-center justify-around"><a class="flex flex-col items-center justify-center min-w-[56px] h-12 px-2 rounded-lg text-on-surface-variant hover:text-on-surface transition-all active:scale-95" data-path="dashboard-planta" href="#"><span class="material-symbols-outlined text-[22px]">factory</span><span class="font-label-sm text-label-sm mt-0.5">Planta</span></a><a class="flex flex-col items-center justify-center min-w-[56px] h-12 px-2 rounded-lg text-on-surface-variant hover:text-on-surface transition-all active:scale-95" data-path="ordenes-trabajo" href="#"><span class="material-symbols-outlined text-[22px]">assignment</span><span class="font-label-sm text-label-sm mt-0.5">Órdenes</span></a><a class="flex flex-col items-center justify-center min-w-[56px] h-12 px-2 rounded-lg text-on-surface-variant hover:text-on-surface transition-all active:scale-95" data-path="activos-equipos" href="#"><span class="material-symbols-outlined text-[22px]">precision_manufacturing</span><span class="font-label-sm text-label-sm mt-0.5">Equipos</span></a><a class="flex flex-col items-center justify-center min-w-[56px] h-12 px-2 rounded-lg text-on-surface-variant hover:text-on-surface transition-all active:scale-95" data-path="rondas-inspeccion" href="#"><span class="material-symbols-outlined text-[22px]">checklist_rtl</span><span class="font-label-sm text-label-sm mt-0.5">Rondas</span></a><a class="flex flex-col items-center justify-center min-w-[56px] h-12 px-2 rounded-lg text-on-surface-variant hover:text-on-surface transition-all active:scale-95" data-path="registro-anomalias" href="#"><span class="material-symbols-outlined text-[22px]">warning</span><span class="font-label-sm text-label-sm mt-0.5">Alertas</span></a></div></nav></body></html>
