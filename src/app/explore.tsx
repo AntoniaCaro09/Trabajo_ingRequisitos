@@ -1,4 +1,6 @@
-import { useMemo, useState } from "react";
+import type { Activo } from "@/data/activos";
+import { obtenerEquipos } from "@/service/api";
+import { useEffect, useMemo, useState } from "react";
 import {
   Modal,
   Pressable,
@@ -9,21 +11,78 @@ import {
   TextInput,
   View,
 } from "react-native";
-import { Activo, activosEjemplo } from "@/data/activos";
 
 export default function ActivosScreen() {
   const [busqueda, setBusqueda] = useState("");
   const [seleccionado, setSeleccionado] = useState<Activo | null>(null);
 
+const [activos, setActivos] = useState<Activo[]>([]);
+const [cargando, setCargando] = useState(true);
+const [error, setError] = useState("");
+
+useEffect(() => {
+  let activo = true;
+
+  async function cargarEquipos() {
+    try {
+      const equipos = await obtenerEquipos();
+
+      const lista: Activo[] = equipos.map((equipo) => ({
+        id: equipo.codigo_interno,
+        nombre: equipo.nombre,
+        area: equipo.area,
+        estado:
+          equipo.estado.toLowerCase() === "operativo"
+            ? "Operativo"
+            : equipo.estado.toLowerCase() === "detenido"
+              ? "Detenido"
+              : "En mantenimiento",
+        ubicacion: "No registrada",
+        descripcion: equipo.descripcion ?? "Sin descripción",
+      }));
+
+      if (activo) {
+        setActivos(lista);
+        setError("");
+      }
+    } catch {
+      if (activo) {
+        setError("No se pudo conectar con PostgreSQL.");
+      }
+    } finally {
+      if (activo) {
+        setCargando(false);
+      }
+    }
+  }
+
+  cargarEquipos();
+
+  return () => {
+    activo = false;
+  };
+}, []);
+
+
   // Filtra los equipos cuando se escribe en el buscador.
-  const resultados = useMemo(() => {
-    const texto = busqueda.trim().toLocaleLowerCase();
-    if (!texto) return activosEjemplo;
-    return activosEjemplo.filter((activo) =>
-      [activo.nombre, activo.id, activo.area, activo.ubicacion]
-        .some((valor) => valor.toLocaleLowerCase().includes(texto))
-    );
-  }, [busqueda]);
+
+const resultados = useMemo(() => {
+  const texto = busqueda.trim().toLowerCase();
+
+  if (!texto) return activos;
+
+  return activos.filter((equipo) =>
+    [
+      equipo.nombre,
+      equipo.id,
+      equipo.area,
+      equipo.ubicacion,
+    ].some((valor) =>
+      valor.toLowerCase().includes(texto)
+    )
+  );
+}, [busqueda, activos]);
+
 
   return (
     <SafeAreaView style={styles.pantalla}>
@@ -41,6 +100,15 @@ export default function ActivosScreen() {
           autoCapitalize="none"
           accessibilityLabel="Buscar activos"
         />
+        
+{cargando && (
+  <Text style={styles.contador}>Cargando equipos...</Text>
+)}
+
+{error !== "" && (
+  <Text style={styles.vacio}>{error}</Text>
+)}
+
         <Text style={styles.contador}>{resultados.length} equipo(s) encontrado(s)</Text>
         {resultados.map((activo) => (
           <Pressable
@@ -61,12 +129,19 @@ export default function ActivosScreen() {
             <Text style={styles.ver}>Ver ficha ›</Text>
           </Pressable>
         ))}
-        {resultados.length === 0 && (
-          <Text style={styles.vacio}>No hay máquinas que coincidan con tu búsqueda.</Text>
-        )}
-        <Text style={styles.aviso}>
-          DEMOSTRACIÓN: los equipos son datos de ejemplo. Aún no se guardan en SQLite ni se sincronizan con el servidor.
-        </Text>
+        
+{!cargando && !error && resultados.length === 0 && (
+  <Text style={styles.vacio}>
+    No hay máquinas que coincidan con tu búsqueda.
+  </Text>
+)}
+
+        
+<Text style={styles.aviso}>
+  Inventario consultado mediante la API de PostgreSQL.
+  El funcionamiento offline aún está pendiente.
+</Text>
+
       </ScrollView>
       <Modal visible={seleccionado !== null} transparent animationType="fade" onRequestClose={() => setSeleccionado(null)}>
         <View style={styles.fondoModal}>
