@@ -54,6 +54,34 @@ app.get('/api/equipos', async (req, res) => {
   }
 });
 
+
+app.get('/api/areas', async (req, res) => {
+  try {
+    const resultado = await db.query(`
+      SELECT
+        id,
+        planta_id,
+        nombre,
+        descripcion
+      FROM public.areas
+      ORDER BY nombre
+    `);
+
+    res.json(resultado.rows);
+  } catch (error) {
+    console.error(
+      'Error al consultar áreas:',
+      error.message
+    );
+
+    res.status(500).json({
+      error: 'No se pudieron consultar las áreas'
+    });
+  }
+});
+
+app.use('/api', require('./panelRoutes')(db));
+
 app.listen(PORT, '127.0.0.1', () => {
   console.log(`Servidor funcionando en http://localhost:${PORT}`);
 });
