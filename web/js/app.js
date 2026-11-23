@@ -45,6 +45,7 @@ function ot() {
   }).join('');
   return `<h1>Reportes y órdenes de trabajo</h1><p class="sub">Define la prioridad y el técnico responsable de cada reporte.</p>
   <p class="msg ${msgErr ? 'err' : ''}" role="status">${esc(msg)}</p>
+  <button class="btn acc" id="nuevoReporte" style="margin-bottom:14px">Reportar falla</button>
   <div class="tw"><table><thead><tr><th>N°</th><th>Equipo</th><th>Falla reportada</th><th>Prioridad</th><th>Técnico</th><th>Estado</th><th></th></tr></thead><tbody>${f || '<tr><td colspan="7">No hay reportes.</td></tr>'}</tbody></table></div>`;
 }
 
@@ -72,6 +73,39 @@ function qr(e) {
   $('#cerrar').onclick = () => d.close();
 }
 
+function nuevoReporte() {
+  const d = $('#dlg');
+  d.innerHTML = `<h2 style="margin:0 0 4px;font-size:18px">Reportar falla de equipo</h2>
+  <p class="msg" id="fmsg" role="status"></p>
+  <label for="repEquipo">Equipo</label>
+  <select id="repEquipo" style="width:100%"><option value="">Elegir equipo</option>${D.equipos.map(e => `<option value="${e.id}">${esc(e.codigo_interno + ' · ' + e.nombre)}</option>`).join('')}</select>
+  <label for="repTitulo">Título de la falla</label><input id="repTitulo" maxlength="150">
+  <label for="repDetalle">Descripción</label><textarea id="repDetalle" maxlength="3000" rows="4" style="width:100%;box-sizing:border-box;padding:10px;border:1px solid #b9cae7;border-radius:4px"></textarea>
+  <label for="repPrio">Prioridad</label><select id="repPrio" style="width:100%">${PRIO.map(p => `<option value="${p}" ${p === 'media' ? 'selected' : ''}>${etq(p)}</option>`).join('')}</select>
+  <div style="display:flex;gap:10px;margin-top:16px"><button class="btn acc" id="guardarReporte">Guardar reporte</button><button class="btn sec" id="cancelarReporte">Cancelar</button></div>`;
+  d.showModal();
+  $('#cancelarReporte').onclick = () => d.close();
+  $('#guardarReporte').onclick = async () => {
+    const m = $('#fmsg');
+    const f = { equipo_id: Number($('#repEquipo').value), titulo: $('#repTitulo').value.trim(),
+      descripcion: $('#repDetalle').value.trim(), prioridad: $('#repPrio').value };
+    m.className = 'msg err';
+    if (!f.equipo_id || !f.titulo || !f.descripcion) { m.textContent = 'Completa equipo, título y descripción.'; return; }
+    $('#guardarReporte').disabled = true;
+    try {
+      const nuevo = await Datos.crearReporte(f);
+      d.close();
+      msg = 'Reporte ' + nuevo.id + ' registrado. Ahora puedes asignarlo a un técnico.';
+      msgErr = false;
+      D = await Datos.cargar();
+      render();
+    } catch (e) {
+      m.textContent = e.message;
+      $('#guardarReporte').disabled = false;
+    }
+  };
+}
+
 function nuevo() {
   const d = $('#dlg');
   d.innerHTML = `<h2 style="margin:0 0 4px;font-size:18px">Agregar activo</h2><p class="msg" id="fmsg" role="status"></p>
@@ -96,6 +130,7 @@ document.addEventListener('click', async e => {
   if (t.dataset.v) { vista = t.dataset.v; msg = ''; render(); }
   if (t.dataset.q) qr(D.equipos.find(x => x.id == t.dataset.q));
   if (t.id === 'nuevo') nuevo();
+  if (t.id === 'nuevoReporte') nuevoReporte();
   if (t.id === 'reint') recargar();
   if (t.dataset.a !== undefined) {
     const r = D.reportes[t.dataset.a], tr = t.closest('tr'), pr = tr.querySelector('[data-p]').value, tec = tr.querySelector('[data-t]').value;
