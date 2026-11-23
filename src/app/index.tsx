@@ -28,19 +28,19 @@ export default function HomeScreen() {
           </Text>
         </Pressable>
 
-        <View style={styles.card}>
-          <Text style={styles.cardTitle}>Reportes de fallas</Text>
+        <Pressable style={styles.card} onPress={() => router.push("/reportes")}>
+          <Text style={styles.cardTitle}>Reportes de fallas  ›</Text>
           <Text style={styles.cardDescription}>
-            Registra anomalías y evidencias fotográficas.
+            Registra anomalías y consulta reportes en PostgreSQL.
           </Text>
-        </View>
+        </Pressable>
 
-        <View style={styles.card}>
-          <Text style={styles.cardTitle}>Órdenes de trabajo</Text>
+        <Pressable style={styles.card} onPress={() => router.push("/ordenes")}>
+          <Text style={styles.cardTitle}>Órdenes de trabajo  ›</Text>
           <Text style={styles.cardDescription}>
             Gestiona las actividades de mantenimiento.
           </Text>
-        </View>
+        </Pressable>
 
         <View style={styles.card}>
           <Text style={styles.cardTitle}>Indicadores</Text>

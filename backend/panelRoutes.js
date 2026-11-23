@@ -141,5 +141,133 @@ module.exports = function crearRutasPanel(pool) {
     } finally { client.release(); }
   });
 
+  // Actualización de avance de OT, disponible SOLO en laboratorio local.
+  // Transacción para mantener consistente el estado de la OT y del reporte.
+  
+  // Actualizar el estado de una orden de trabajo
+  router.patch('/ordenes/:id/estado', soloDesarrollo, async (req, res) => {
+    const id = req.params.id;
+    const nuevo = req.body?.estado;
+
+    const permitidas = {
+      pendiente: ['en_progreso', 'cancelada'],
+      asignada: ['en_progreso', 'cancelada'],
+      en_progreso: ['pausada', 'completada'],
+      pausada: ['en_progreso', 'cancelada'],
+      completada: [],
+      cancelada: []
+    };
+
+    if (!idValido(id) || typeof nuevo !== 'string') {
+      return res.status(400).json({
+        error: 'Orden o estado inválido.'
+      });
+    }
+
+    const client = await pool.connect().catch(error => {
+      console.error('Error de conexión:', error.message);
+      return null;
+    });
+
+    if (!client) {
+      return res.status(500).json({
+        error: 'Sin conexión con PostgreSQL.'
+      });
+    }
+
+    try {
+      await client.query('BEGIN');
+
+      // Buscar y bloquear solamente la orden seleccionada
+      const actual = await client.query(
+        `SELECT id, estado, reporte_anomalia_id, fecha_inicio
+         FROM public.ordenes_trabajo
+         WHERE id = $1
+         FOR UPDATE`,
+        [id]
+      );
+
+      if (!actual.rowCount) {
+        await client.query('ROLLBACK');
+
+        return res.status(404).json({
+          error: 'Orden no encontrada.'
+        });
+      }
+
+      const orden = actual.rows[0];
+
+      // Validar que el cambio de estado esté permitido
+      if (!(permitidas[orden.estado] || []).includes(nuevo)) {
+        await client.query('ROLLBACK');
+
+        return res.status(409).json({
+          error: `No se permite pasar de ${orden.estado} a ${nuevo}.`
+        });
+      }
+
+      // $2 actualiza el estado.
+      // $3 se utiliza exclusivamente para las comparaciones de texto.
+      const resultado = await client.query(
+        `UPDATE public.ordenes_trabajo
+         SET
+           estado = $2,
+           fecha_inicio = CASE
+             WHEN $3::text = 'en_progreso'
+                  AND fecha_inicio IS NULL
+             THEN CURRENT_TIMESTAMP
+             ELSE fecha_inicio
+           END,
+           fecha_finalizacion = CASE
+             WHEN $3::text = 'completada'
+             THEN CURRENT_TIMESTAMP
+             ELSE fecha_finalizacion
+           END
+         WHERE id = $1
+         RETURNING
+           id,
+           reporte_anomalia_id,
+           equipo_id,
+           usuario_asignado_id,
+           titulo,
+           prioridad,
+           estado,
+           fecha_inicio,
+           fecha_finalizacion`,
+        [id, nuevo, nuevo]
+      );
+
+      // Al completar la orden, resolver el reporte asociado
+      if (
+        orden.reporte_anomalia_id &&
+        nuevo === 'completada'
+      ) {
+        await client.query(
+          `UPDATE public.reportes_anomalias
+           SET estado = 'resuelto'
+           WHERE id = $1`,
+          [orden.reporte_anomalia_id]
+        );
+      }
+
+      await client.query('COMMIT');
+
+      return res.json(resultado.rows[0]);
+
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {});
+
+      enviarError(
+        res,
+        error,
+        'Error actualizando orden:'
+      );
+
+    } finally {
+      client.release();
+    }
+  });
+
+
   return router;
 };
