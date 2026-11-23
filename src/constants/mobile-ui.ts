@@ -1,0 +1,22 @@
+import { StyleSheet } from 'react-native';
+export const ui = StyleSheet.create({
+  screen: { flex: 1, backgroundColor: '#F1F4F8' },
+  content: { padding: 18, paddingBottom: 100 },
+  title: { fontSize: 26, fontWeight: '800', color: '#142B45', marginBottom: 5 },
+  hint: { color: '#64748B', fontSize: 14, marginBottom: 16, lineHeight: 20 },
+  card: { backgroundColor: '#fff', borderRadius: 12, padding: 16, marginBottom: 12, borderWidth: 1, borderColor: '#DCE5F0' },
+  bold: { fontSize: 16, fontWeight: '700', color: '#142B45' },
+  meta: { color: '#64748B', marginTop: 5 },
+  label: { fontWeight: '700', color: '#142B45', marginTop: 14, marginBottom: 7 },
+  input: { backgroundColor: '#fff', borderWidth: 1, borderColor: '#BCCBDC', borderRadius: 9, padding: 12, color: '#142B45', fontSize: 15 },
+  button: { backgroundColor: '#F59E0B', padding: 14, borderRadius: 9, alignItems: 'center', marginTop: 15 },
+  buttonText: { color: '#142B45', fontWeight: '800', fontSize: 15 },
+  secondaryButton: { borderWidth: 1, borderColor: '#BCCBDC', padding: 11, borderRadius: 9, marginTop: 9, alignItems: 'center' },
+  error: { color: '#B91C1C', marginTop: 10, lineHeight: 20 },
+  success: { color: '#166534', marginTop: 10 },
+  options: { flexDirection: 'row', flexWrap: 'wrap', gap: 7 },
+  option: { borderColor: '#CBD5E1', borderWidth: 1, borderRadius: 8, paddingVertical: 10, paddingHorizontal: 12, backgroundColor: 'white' },
+  selected: { backgroundColor: '#142B45', borderColor: '#142B45' },
+  optionText: { color: '#142B45' },
+  selectedText: { color: '#fff', fontWeight: '700' },
+});
