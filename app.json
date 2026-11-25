@@ -1,3 +1,4 @@
+
 {
   "expo": {
     "name": "mantenimiento-planta",
@@ -31,6 +32,24 @@
           "backgroundColor": "#208AEF",
           "image": "./assets/images/splash-icon.png",
           "imageWidth": 76
+        }
+      ],
+      "expo-sqlite",
+      "expo-secure-store",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Permitir que Mantenimiento Planta utilice la cámara para escanear códigos QR y registrar equipos.",
+          "recordAudioAndroid": false,
+          "barcodeScannerEnabled": true
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "cameraPermission": "Permitir que Mantenimiento Planta utilice la cámara para fotografiar fallas de equipos.",
+          "photosPermission": "Permitir seleccionar fotografías para adjuntarlas a los reportes de mantenimiento.",
+          "microphonePermission": false
         }
       ]
     ],

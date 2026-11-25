@@ -7,10 +7,13 @@ const { Pool } = require('pg');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
+const HOST = process.env.API_BIND_HOST || '127.0.0.1';
 
+// Configuración de Express
 app.use(cors());
 app.use(express.json());
 
+// Conexión con PostgreSQL
 const db = new Pool({
   host: process.env.DB_HOST,
   port: Number(process.env.DB_PORT || 5432),
@@ -46,7 +49,10 @@ app.get('/api/equipos', async (req, res) => {
 
     res.json(resultado.rows);
   } catch (error) {
-    console.error('Error al consultar equipos:', error.message);
+    console.error(
+      'Error al consultar equipos:',
+      error.message
+    );
 
     res.status(500).json({
       error: 'No se pudieron consultar los equipos'
@@ -54,7 +60,7 @@ app.get('/api/equipos', async (req, res) => {
   }
 });
 
-
+// Consultar las áreas industriales
 app.get('/api/areas', async (req, res) => {
   try {
     const resultado = await db.query(`
@@ -80,8 +86,17 @@ app.get('/api/areas', async (req, res) => {
   }
 });
 
+// Panel web existente
+// Conserva las funciones de tu compañera
 app.use('/api', require('./panelRoutes')(db));
 
-app.listen(PORT, '127.0.0.1', () => {
-  console.log(`Servidor funcionando en http://localhost:${PORT}`);
+// NUEVO: API de la aplicación móvil
+// Autenticación, QR, fotografías y sincronización
+app.use('/api/mobile', require('./mobileRoutes')(db));
+
+// Iniciar el servidor
+app.listen(PORT, HOST, () => {
+  console.log(
+    `Servidor funcionando en http://${HOST}:${PORT}`
+  );
 });
