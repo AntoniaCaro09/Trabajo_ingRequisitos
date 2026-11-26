@@ -8,14 +8,31 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <link rel="stylesheet" href="css/styles.css">
 </head>
-<body class="es-supervisor">
-<div class="app">
+<body>
+<section id="inicio">
+  <div class="ini-top"><b>MANTENIMIENTO</b><span>GESTIÓN INDUSTRIAL</span></div>
+  <div class="ini-body">
+    <h1>Bienvenido</h1>
+    <p class="sub">Elige cómo quieres ingresar al panel de la planta.</p>
+    <div class="roles">
+      <button class="rolcard" data-rol="administrador" type="button">
+        <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg>
+        <b>Administrador</b>
+      </button>
+      <button class="rolcard" data-rol="supervisor" type="button">
+        <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4h6v3H9z"/><path d="M9 5.5H7a1 1 0 0 0-1 1V20a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V6.5a1 1 0 0 0-1-1h-2"/><path d="M9 13h6M9 17h4"/></svg>
+        <b>Supervisor</b>
+      </button>
+    </div>
+  </div>
+</section>
+<div class="app" hidden>
 <aside>
   <div class="logo">Mantenimiento Planta<small>Panel de gestión</small></div>
   <button class="nav" data-v="panel" aria-current="page">Panel</button>
   <button class="nav" data-v="ot">Reportes y OT</button>
   <button class="nav" data-v="activos">Activos</button>
-  <div class="rol"><label for="rol">Ver como</label><select id="rol"><option value="supervisor">Supervisor</option><option value="jefatura">Jefatura (Administrador)</option></select></div>
+  <div class="rol">Ingresaste como<b id="urol"></b><button class="btn out" id="cambiar" type="button" style="margin-top:10px;width:100%">Cambiar de rol</button></div>
 </aside>
 <main id="main"></main>
 </div>

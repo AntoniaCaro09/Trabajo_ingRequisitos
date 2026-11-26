@@ -5,6 +5,7 @@ const fecha = f => new Date(f).toLocaleString('es-CL', { day: '2-digit', month: 
 const PRIO = ['critica', 'alta', 'media', 'baja'];
 const ABIERTAS = ['pendiente', 'asignada', 'en_progreso', 'pausada'];
 const CERRADAS = ['completada', 'cancelada'];
+const ESTADOS = ['operativo', 'en_mantenimiento', 'fuera_de_servicio'];
 let D = null, vista = 'panel', msg = '', msgErr = false, fq = '', fe = '';
 
 async function recargar() {
@@ -25,8 +26,8 @@ function panel() {
    <div class="kpi"><b>${ab.length}</b><span>OT abiertas</span></div>
    <div class="kpi"><b>${sin}</b><span>Reportes sin asignar</span></div>
    <div class="kpi"><b>${D.equipos.length ? Math.round(op / D.equipos.length * 100) : 0}%</b><span>Equipos operativos</span></div>
-   <div class="kpi jef"><b>${mttr}</b><span>MTTR (OT completadas)</span></div>
-   <div class="kpi jef"><b>—</b><span>MTBF (por calcular)</span></div></div>
+   <div class="kpi adm"><b>${mttr}</b><span>MTTR (OT completadas)</span></div>
+   <div class="kpi adm"><b>—</b><span>MTBF (por calcular)</span></div></div>
   <div class="two"><div class="box"><h2>OT abiertas por prioridad</h2>
    ${PRIO.map(p => `<div class="bar"><span>${etq(p)}</span><i class="${p}" style="width:${cnt(p) / mx * 100}%;min-width:4px"></i><b>${cnt(p)}</b></div>`).join('')}</div>
   <div class="box"><h2>Requieren atención</h2>
@@ -45,17 +46,16 @@ function ot() {
   }).join('');
   return `<h1>Reportes y órdenes de trabajo</h1><p class="sub">Define la prioridad y el técnico responsable de cada reporte.</p>
   <p class="msg ${msgErr ? 'err' : ''}" role="status">${esc(msg)}</p>
-  <button class="btn acc" id="nuevoReporte" style="margin-bottom:14px">Reportar falla</button>
   <div class="tw"><table><thead><tr><th>N°</th><th>Equipo</th><th>Falla reportada</th><th>Prioridad</th><th>Técnico</th><th>Estado</th><th></th></tr></thead><tbody>${f || '<tr><td colspan="7">No hay reportes.</td></tr>'}</tbody></table></div>`;
 }
 
 function act() {
   const l = D.equipos.filter(e => (e.nombre + e.codigo_interno + (e.numero_serie || '')).toLowerCase().includes(fq.toLowerCase()) && (!fe || e.estado === fe))
-    .map(e => `<tr><td>${esc(e.codigo_interno)}</td><td>${esc(e.nombre)}</td><td>${esc(e.area)}</td><td>${esc(e.numero_serie || '—')}</td><td><span class="chip ${e.estado}">${etq(e.estado)}</span></td><td><button class="btn sec" data-q="${e.id}">Ver QR</button></td></tr>`).join('');
+    .map(e => `<tr><td>${esc(e.codigo_interno)}</td><td>${esc(e.nombre)}</td><td>${esc(e.area)}</td><td>${esc(e.numero_serie || '—')}</td><td><span class="chip ${e.estado}">${etq(e.estado)}</span></td><td class="acc"><button class="btn sec" data-q="${e.id}">Ver QR</button> <button class="btn sec adm" data-ed="${e.id}">Editar</button> <button class="btn del adm" data-del="${e.id}">Eliminar</button></td></tr>`).join('');
   return `<h1>Activos de planta</h1><p class="sub">Catálogo de equipos con su código QR.</p>
   <div class="tools"><input id="fq" type="search" placeholder="Buscar por nombre, código o serie" value="${esc(fq)}" aria-label="Buscar activos">
    <select id="fe" aria-label="Filtrar por estado"><option value="">Todos los estados</option>${['operativo', 'en_mantenimiento', 'fuera_de_servicio'].map(e => `<option value="${e}" ${e === fe ? 'selected' : ''}>${etq(e)}</option>`).join('')}</select>
-   <button class="btn acc jef" id="nuevo">Agregar activo</button></div>
+   <button class="btn acc adm" id="nuevo">Agregar activo</button></div>
   <div class="tw"><table><thead><tr><th>Código</th><th>Equipo</th><th>Área</th><th>N° de serie</th><th>Estado</th><th></th></tr></thead><tbody>${l || '<tr><td colspan="6">Ningún equipo coincide con la búsqueda.</td></tr>'}</tbody></table></div>`;
 }
 
@@ -67,61 +67,55 @@ function render() {
 
 function qr(e) {
   const d = $('#dlg');
-  d.innerHTML = `<h2 style="margin:0 0 4px;font-size:18px">${esc(e.nombre)}</h2><p class="sub" style="margin:0">Código ${esc(e.codigo_interno)} · serie ${esc(e.numero_serie || '—')}</p><div class="qr" id="qrbox"></div><button class="btn sec" id="cerrar">Cerrar</button>`;
+  d.innerHTML = `<h2 style="margin:0 0 4px;font-size:18px">${esc(e.nombre)}</h2><p class="sub" style="margin:0">Código ${esc(e.codigo_interno)} · serie ${esc(e.numero_serie || '—')}</p><div class="qr" id="qrbox"></div><div style="display:flex;gap:10px"><button class="btn" id="imp">Imprimir QR</button><button class="btn sec" id="cerrar">Cerrar</button></div>`;
   d.showModal();
   try { new QRCode($('#qrbox'), { text: e.codigo_qr, width: 170, height: 170 }); } catch (x) { $('#qrbox').textContent = e.codigo_qr; }
   $('#cerrar').onclick = () => d.close();
-}
-
-function nuevoReporte() {
-  const d = $('#dlg');
-  d.innerHTML = `<h2 style="margin:0 0 4px;font-size:18px">Reportar falla de equipo</h2>
-  <p class="msg" id="fmsg" role="status"></p>
-  <label for="repEquipo">Equipo</label>
-  <select id="repEquipo" style="width:100%"><option value="">Elegir equipo</option>${D.equipos.map(e => `<option value="${e.id}">${esc(e.codigo_interno + ' · ' + e.nombre)}</option>`).join('')}</select>
-  <label for="repTitulo">Título de la falla</label><input id="repTitulo" maxlength="150">
-  <label for="repDetalle">Descripción</label><textarea id="repDetalle" maxlength="3000" rows="4" style="width:100%;box-sizing:border-box;padding:10px;border:1px solid #b9cae7;border-radius:4px"></textarea>
-  <label for="repPrio">Prioridad</label><select id="repPrio" style="width:100%">${PRIO.map(p => `<option value="${p}" ${p === 'media' ? 'selected' : ''}>${etq(p)}</option>`).join('')}</select>
-  <div style="display:flex;gap:10px;margin-top:16px"><button class="btn acc" id="guardarReporte">Guardar reporte</button><button class="btn sec" id="cancelarReporte">Cancelar</button></div>`;
-  d.showModal();
-  $('#cancelarReporte').onclick = () => d.close();
-  $('#guardarReporte').onclick = async () => {
-    const m = $('#fmsg');
-    const f = { equipo_id: Number($('#repEquipo').value), titulo: $('#repTitulo').value.trim(),
-      descripcion: $('#repDetalle').value.trim(), prioridad: $('#repPrio').value };
-    m.className = 'msg err';
-    if (!f.equipo_id || !f.titulo || !f.descripcion) { m.textContent = 'Completa equipo, título y descripción.'; return; }
-    $('#guardarReporte').disabled = true;
-    try {
-      const nuevo = await Datos.crearReporte(f);
-      d.close();
-      msg = 'Reporte ' + nuevo.id + ' registrado. Ahora puedes asignarlo a un técnico.';
-      msgErr = false;
-      D = await Datos.cargar();
-      render();
-    } catch (e) {
-      m.textContent = e.message;
-      $('#guardarReporte').disabled = false;
-    }
+  $('#imp').onclick = () => {
+    const el = $('#qrbox img') || $('#qrbox canvas'), src = el ? (el.src || el.toDataURL()) : '', w = window.open('', '_blank');
+    if (!w) return;
+    w.document.write(`<title>QR ${esc(e.codigo_interno)}</title><body style="font-family:sans-serif;text-align:center"><h2>${esc(e.nombre)}</h2><p>${esc(e.codigo_interno)}</p><img src="${src}" width="260" onload="print()">`);
+    w.document.close();
   };
 }
 
-function nuevo() {
-  const d = $('#dlg');
-  d.innerHTML = `<h2 style="margin:0 0 4px;font-size:18px">Agregar activo</h2><p class="msg" id="fmsg" role="status"></p>
-  <label for="ar">Área</label><select id="ar" style="width:100%"><option value="">Elegir área</option>${D.areas.map(a => `<option value="${a.id}">${esc(a.nombre)}</option>`).join('')}</select>
-  <label for="cod">Código interno</label><input id="cod"><label for="n">Nombre del equipo</label><input id="n"><label for="se">N° de serie (opcional)</label><input id="se">
-  <div style="display:flex;gap:10px;margin-top:16px"><button class="btn acc" id="gd">Guardar activo</button><button class="btn sec" id="cn">Cancelar</button></div>`;
+const serieDup = (s, id) => s && D.equipos.some(x => x.id !== id && (x.numero_serie || '').trim().toLowerCase() === s.toLowerCase());
+
+function formEquipo(e) {
+  const ed = !!e, d = $('#dlg'), v = k => esc(e ? e[k] ?? '' : '');
+  d.innerHTML = `<h2 style="margin:0 0 4px;font-size:18px">${ed ? 'Editar activo' : 'Agregar activo'}</h2><p class="msg" id="fmsg" role="status"></p>
+  <label for="ar">Área</label><select id="ar" style="width:100%"><option value="">Elegir área</option>${D.areas.map(a => `<option value="${a.id}" ${ed && a.id === e.area_id ? 'selected' : ''}>${esc(a.nombre)}</option>`).join('')}</select>
+  <label for="cod">Código interno</label><input id="cod" value="${v('codigo_interno')}">
+  <label for="n">Nombre del equipo</label><input id="n" value="${v('nombre')}">
+  <label for="ma">Marca (opcional)</label><input id="ma" value="${v('marca')}">
+  <label for="mo">Modelo (opcional)</label><input id="mo" value="${v('modelo')}">
+  <label for="se">N° de serie (opcional)</label><input id="se" value="${v('numero_serie')}">
+  ${ed ? `<label for="es">Estado</label><select id="es" style="width:100%">${ESTADOS.map(s => `<option value="${s}" ${s === e.estado ? 'selected' : ''}>${etq(s)}</option>`).join('')}</select>` : ''}
+  <div style="display:flex;gap:10px;margin-top:16px"><button class="btn acc" id="gd">Guardar</button><button class="btn sec" id="cn">Cancelar</button></div>`;
   d.showModal();
   $('#cn').onclick = () => d.close();
   $('#gd').onclick = async () => {
-    const m = $('#fmsg'), a = +$('#ar').value, c = $('#cod').value.trim(), n = $('#n').value.trim(), s = $('#se').value.trim();
+    const m = $('#fmsg'), f = { area_id: +$('#ar').value, codigo_interno: $('#cod').value.trim(), nombre: $('#n').value.trim(), marca: $('#ma').value.trim() || null, modelo: $('#mo').value.trim() || null, numero_serie: $('#se').value.trim() || null };
     m.className = 'msg err';
-    if (!a || !c || !n) { m.textContent = 'Completa área, código interno y nombre.'; return; }
+    if (!f.area_id || !f.codigo_interno || !f.nombre) { m.textContent = 'Completa área, código interno y nombre.'; return; }
+    if (serieDup(f.numero_serie, e && e.id)) { m.textContent = 'Ese número de serie ya existe. No se guardó el activo.'; return; }
     try {
-      const e = await Datos.crearEquipo({ area_id: a, codigo_interno: c, nombre: n, numero_serie: s || null });
-      D = await Datos.cargar(); render(); qr(D.equipos.find(x => x.id === e.id) || e);
+      if (ed) { await Datos.editarEquipo(e.id, { ...f, estado: $('#es').value }); d.close(); D = await Datos.cargar(); render(); }
+      else { const n = await Datos.crearEquipo(f); D = await Datos.cargar(); render(); qr(D.equipos.find(x => x.id === n.id) || n); }
     } catch (x) { m.textContent = x.message; }
+  };
+}
+
+function borrar(e) {
+  const d = $('#dlg'), nr = D.reportes.filter(r => r.equipo_id === e.id).length, no = D.ordenes.filter(o => o.equipo_id === e.id).length;
+  d.innerHTML = nr || no
+    ? `<h2 style="margin:0 0 8px;font-size:18px">No se puede eliminar</h2><p>${esc(e.nombre)} tiene ${nr} reporte(s) y ${no} orden(es) de trabajo asociados, y borrarlo dejaría ese historial sin equipo. Si ya no se usa, edítalo y márcalo como “Fuera de servicio”.</p><button class="btn sec" id="cn">Entendido</button>`
+    : `<h2 style="margin:0 0 8px;font-size:18px">Eliminar activo</h2><p class="msg" id="fmsg" role="status"></p><p>¿Eliminar <b>${esc(e.codigo_interno)} · ${esc(e.nombre)}</b>? Esta acción no se puede deshacer.</p><div style="display:flex;gap:10px;margin-top:16px"><button class="btn del" id="ok">Eliminar</button><button class="btn sec" id="cn">Cancelar</button></div>`;
+  d.showModal();
+  $('#cn').onclick = () => d.close();
+  if ($('#ok')) $('#ok').onclick = async () => {
+    try { await Datos.eliminarEquipo(e.id); d.close(); D = await Datos.cargar(); render(); }
+    catch (x) { $('#fmsg').className = 'msg err'; $('#fmsg').textContent = x.message; }
   };
 }
 
@@ -129,8 +123,9 @@ document.addEventListener('click', async e => {
   const t = e.target.closest('button'); if (!t) return;
   if (t.dataset.v) { vista = t.dataset.v; msg = ''; render(); }
   if (t.dataset.q) qr(D.equipos.find(x => x.id == t.dataset.q));
-  if (t.id === 'nuevo') nuevo();
-  if (t.id === 'nuevoReporte') nuevoReporte();
+  if (t.id === 'nuevo') formEquipo();
+  if (t.dataset.ed) formEquipo(D.equipos.find(x => x.id == t.dataset.ed));
+  if (t.dataset.del) borrar(D.equipos.find(x => x.id == t.dataset.del));
   if (t.id === 'reint') recargar();
   if (t.dataset.a !== undefined) {
     const r = D.reportes[t.dataset.a], tr = t.closest('tr'), pr = tr.querySelector('[data-p]').value, tec = tr.querySelector('[data-t]').value;
@@ -145,5 +140,13 @@ document.addEventListener('change', e => { if (e.target.id === 'fe') { fe = e.ta
 document.addEventListener('input', e => {
   if (e.target.id === 'fq') { fq = e.target.value; const p = e.target.selectionStart; render(); const i = $('#fq'); i.focus(); i.setSelectionRange(p, p); }
 });
-$('#rol').addEventListener('change', e => { document.body.className = 'es-' + e.target.value; });
+const ROLES = { administrador: 'Administrador', supervisor: 'Supervisor' };
+document.querySelectorAll('.rolcard').forEach(b => b.addEventListener('click', () => {
+  document.body.className = 'es-' + b.dataset.rol; $('#urol').textContent = ROLES[b.dataset.rol];
+  vista = 'panel'; msg = ''; fq = ''; fe = '';
+  $('#inicio').hidden = true; $('.app').hidden = false; render(); window.scrollTo(0, 0);
+}));
+$('#cambiar').addEventListener('click', () => {
+  $('#dlg').close(); $('.app').hidden = true; $('#inicio').hidden = false; document.body.className = '';
+});
 recargar();
