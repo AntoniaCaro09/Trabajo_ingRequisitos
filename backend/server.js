@@ -93,7 +93,7 @@ app.use('/api', require('./panelRoutes')(db));
 // NUEVO: API de la aplicación móvil
 // Autenticación, QR, fotografías y sincronización
 app.use('/api/mobile', require('./mobileRoutes')(db));
-
+app.use('/api/web', require('./webCompatRoutes')(db));
 // Iniciar el servidor
 app.listen(PORT, HOST, () => {
   console.log(

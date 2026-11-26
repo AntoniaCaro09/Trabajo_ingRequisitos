@@ -1,108 +1,202 @@
-// Capa de datos: es el ÚNICO archivo que habla con la base. Las pantallas (app.js) solo usan Datos.*
+/**
+ * Capa de datos de la web, compatible con las pantallas actuales:
+ * Datos.cargar / asignar / crearEquipo / editarEquipo / eliminarEquipo.
+ * Comparte cuentas/JWT con la app móvil y lee la MISMA BD PostgreSQL.
+ * No depende de Supabase ni mantiene datos ficticios.
+ */
 (function () {
+  'use strict';
   const C = window.CONFIG || {};
-  const sb = C.SUPABASE_URL && window.supabase ? window.supabase.createClient(C.SUPABASE_URL, C.SUPABASE_ANON_KEY) : null;
-  const DUP = 'Ya existe un equipo con ese código interno en esa área.', ASOC = 'No se puede eliminar: tiene reportes u órdenes de trabajo asociados.';
-  const ok = r => { if (r.error) throw new Error(r.error.message); return r.data; };
-  const hace = h => new Date(Date.now() - h * 36e5).toISOString();
+  const API = String(C.API_BASE_URL || 'http://127.0.0.1:3001').replace(/\/+$/, '');
+  let token = null;
+  let usuario = null;
+  let esperandoSesion = null;
+  let resolverSesion = null;
+  let dialogo = null;
 
-  // ---- Datos de ejemplo, con los mismos campos que las tablas ----
-  const M = {
-    areas: [{ id: 1, nombre: 'Envasado' }, { id: 2, nombre: 'Proceso' }, { id: 3, nombre: 'Servicios' }, { id: 4, nombre: 'Despacho' }],
-    usuarios: [{ id: 1, nombre: 'Roberto', apellido: 'Morales' }, { id: 2, nombre: 'Juan', apellido: 'Valenzuela' }, { id: 3, nombre: 'Pedro', apellido: 'Soto' }, { id: 4, nombre: 'Marta', apellido: 'Reyes' }],
-    equipos: [
-      [1, 1, 'EQ-001', 'Prensa hidráulica H-01', 'HY-2201', 'operativo'], [2, 3, 'EQ-002', 'Compresor de tornillo K-3', 'AC-0481', 'en_mantenimiento'],
-      [3, 2, 'EQ-003', 'Bomba centrífuga B-102', 'BC-1020', 'operativo'], [4, 1, 'EQ-004', 'Cinta transportadora C-04', 'CT-0404', 'operativo'],
-      [5, 2, 'EQ-005', 'Mezclador continuo M-01', 'MX-0101', 'fuera_de_servicio'], [6, 4, 'EQ-006', 'Paletizador final PAL-05', 'PL-0505', 'operativo']
-    ].map(([id, area_id, codigo_interno, nombre, numero_serie, estado]) => ({ id, area_id, codigo_interno, codigo_qr: crypto.randomUUID(), nombre, numero_serie, estado })),
-    reportes: [
-      { id: 1, equipo_id: 3, titulo: 'Fuga de aceite en sello', descripcion: 'Gotea bajo la bomba', prioridad: 'alta', estado: 'pendiente', fecha_reporte: hace(3) },
-      { id: 2, equipo_id: 5, titulo: 'Se detiene por sobrecarga', descripcion: 'Salta el térmico', prioridad: 'critica', estado: 'pendiente', fecha_reporte: hace(4) },
-      { id: 3, equipo_id: 4, titulo: 'Ruido anormal en rodillo', descripcion: 'Ruido metálico al girar', prioridad: 'media', estado: 'en_revision', fecha_reporte: hace(20) },
-      { id: 4, equipo_id: 1, titulo: 'Falla de sensor de presión', descripcion: 'Lectura en cero', prioridad: 'alta', estado: 'resuelto', fecha_reporte: hace(70) }
-    ],
-    ordenes: [
-      { id: 1, reporte_anomalia_id: 3, equipo_id: 4, usuario_asignado_id: 3, titulo: 'Ruido anormal en rodillo', prioridad: 'media', estado: 'asignada', fecha_inicio: null, fecha_finalizacion: null },
-      { id: 2, reporte_anomalia_id: 4, equipo_id: 1, usuario_asignado_id: 4, titulo: 'Falla de sensor de presión', prioridad: 'alta', estado: 'completada', fecha_inicio: hace(66), fecha_finalizacion: hace(63.5) }
-    ]
-  };
+  function montarLogin() {
+    if (dialogo) return;
+    const style = document.createElement('style');
+    style.textContent = `
+      #web-login-overlay { position:fixed; inset:0; z-index:9999;
+        background:rgba(10,20,38,.88); display:grid; place-items:center; padding:20px; }
+      #web-login-overlay[hidden] { display:none!important; }
+      #web-login-overlay .web-login-box { max-width:430px; width:100%; background:#fff;
+        color:#142b45; border-radius:14px; padding:30px; box-shadow:0 20px 65px #0005;
+        font-family:Inter,system-ui,sans-serif; }
+      #web-login-overlay h2 { margin:0 0 6px; font-size:23px; }
+      #web-login-overlay p { color:#5e6e82; line-height:1.45; }
+      #web-login-overlay label { display:block; margin:15px 0 6px; font-weight:600; }
+      #web-login-overlay input { display:block; width:100%; box-sizing:border-box;
+        border:1px solid #94a3b8; background:#fff; color:#142b45;
+        padding:12px; border-radius:7px; font:inherit; min-height:48px; }
+      #web-login-overlay button { width:100%; min-height:48px; margin-top:20px;
+        background:#142b45; color:white; border:0; border-radius:7px;
+        cursor:pointer; font:inherit; font-weight:600; }
+      #web-login-overlay button:disabled { opacity:.65; cursor:wait; }
+      #web-login-error { min-height:24px; margin-top:14px!important; color:#b42318!important; }
+    `;
+    document.head.appendChild(style);
+    dialogo = document.createElement('div');
+    dialogo.id = 'web-login-overlay';
+    dialogo.hidden = true;
+    dialogo.innerHTML = `<form class="web-login-box" id="web-login-form">
+      <h2>Acceso al panel</h2>
+      <p>Ingresa con una cuenta de <b>Supervisor</b> o <b>Administrador</b>
+      de Mantenimiento Planta. Es la misma base de usuarios de la aplicación móvil.</p>
+      <label for="web-login-correo">Correo</label>
+      <input id="web-login-correo" type="email" autocomplete="username" required maxlength="150">
+      <label for="web-login-password">Contraseña</label>
+      <input id="web-login-password" type="password" autocomplete="current-password" required>
+      <button type="submit" id="web-login-submit">Iniciar sesión</button>
+      <p id="web-login-error" role="alert"></p>
+    </form>`;
+    document.body.appendChild(dialogo);
+    dialogo.querySelector('#web-login-form').addEventListener('submit', async event => {
+      event.preventDefault();
+      const boton = dialogo.querySelector('#web-login-submit');
+      const error = dialogo.querySelector('#web-login-error');
+      const correo = dialogo.querySelector('#web-login-correo').value.trim();
+      const password = dialogo.querySelector('#web-login-password').value;
+      boton.disabled = true;
+      error.textContent = '';
+      try {
+        const resp = await fetch(`${API}/api/mobile/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ correo, password }),
+          cache: 'no-store',
+        });
+        const data = await leerJSON(resp);
+        if (!resp.ok) throw new Error(data.error || `Inicio de sesión rechazado (${resp.status}).`);
+        const roles = Array.isArray(data.usuario?.roles) ? data.usuario.roles : [];
+        if (!roles.some(r => r === 'SUPERVISOR' || r === 'ADMIN')) {
+          throw new Error('Esta cuenta no tiene permisos para ingresar al panel web.');
+        }
+        token = data.token;
+        usuario = data.usuario;
+        actualizarRolesVisibles();
+        dialogo.querySelector('#web-login-password').value = '';
+        dialogo.hidden = true;
+        if (resolverSesion) resolverSesion(token);
+        resolverSesion = null;
+        esperandoSesion = null;
+      } catch (e) {
+        error.textContent = e.message || 'Error de inicio de sesión.';
+      } finally {
+        boton.disabled = false;
+      }
+    });
+  }
+
+  function actualizarRolesVisibles() {
+    // La selección por rol de la web es VISUAL. La autorización real está en el servidor.
+    // Deshabilitamos la opción Administrador si el JWT no tiene ese rol.
+    for (const b of document.querySelectorAll('.rolcard[data-rol]')) {
+      const permitido = b.dataset.rol === 'administrador'
+        ? usuario?.roles?.includes('ADMIN')
+        : usuario?.roles?.some(r => r === 'ADMIN' || r === 'SUPERVISOR');
+      b.disabled = !permitido;
+      b.style.opacity = permitido ? '' : '0.45';
+      b.title = permitido ? '' : 'Tu cuenta no tiene este rol';
+    }
+    // Compatibilidad con la versión antigua del selector por rol:
+    const combo = document.getElementById('rol');
+    if (combo) {
+      const admin = [...combo.options].find(o => /jefatura|administrador/i.test(o.value));
+      if (admin) admin.disabled = !usuario?.roles?.includes('ADMIN');
+    }
+  }
+
+  function pedirSesion() {
+    if (token) return Promise.resolve(token);
+    if (esperandoSesion) return esperandoSesion;
+    montarLogin();
+    dialogo.hidden = false;
+    esperandoSesion = new Promise(resolve => { resolverSesion = resolve; });
+    setTimeout(() => dialogo.querySelector('#web-login-correo').focus(), 0);
+    return esperandoSesion;
+  }
+
+  async function leerJSON(resp) {
+    const txt = await resp.text();
+    if (!txt) return {};
+    try { return JSON.parse(txt); }
+    catch { return { error: 'El servidor respondió con un formato inesperado.' }; }
+  }
+
+  async function solicitar(path, opciones = {}, reintentar = true) {
+    await pedirSesion();
+    let resp;
+    try {
+      resp = await fetch(`${API}/api/web${path}`, {
+        ...opciones,
+        cache: 'no-store',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(opciones.headers || {}),
+          Authorization: `Bearer ${token}`,
+        },
+      });
+    } catch {
+      throw new Error(`No se pudo conectar con Node.js en ${API}. Verifica que node server.js esté encendido.`);
+    }
+    if (resp.status === 401 && reintentar) {
+      token = null;
+      usuario = null;
+      return solicitar(path, opciones, false);
+    }
+    const data = await leerJSON(resp);
+    if (!resp.ok) throw new Error(data.error || `Error ${resp.status} en ${path}`);
+    return data;
+  }
 
   function armar(d) {
-    const A = Object.fromEntries(d.areas.map(a => [a.id, a.nombre])), E = Object.fromEntries(d.equipos.map(e => [e.id, e.nombre]));
+    const areas = Array.isArray(d.areas) ? d.areas : [];
+    const equipos = Array.isArray(d.equipos) ? d.equipos : [];
+    const ordenes = Array.isArray(d.ordenes) ? d.ordenes : [];
+    const reportes = Array.isArray(d.reportes) ? d.reportes : [];
+    const A = Object.fromEntries(areas.map(a => [String(a.id), a.nombre]));
+    const E = Object.fromEntries(equipos.map(e => [String(e.id), e.nombre]));
+    const porReporte = new Map();
+    for (const o of [...ordenes].sort((a, b) => Number(b.id) - Number(a.id))) {
+      const id = String(o.reporte_anomalia_id);
+      if (!porReporte.has(id)) porReporte.set(id, o);
+    }
     return {
-      areas: d.areas, tecnicos: d.tecnicos,
-      equipos: d.equipos.map(e => ({ ...e, area: A[e.area_id] })),
-      ordenes: d.ordenes.map(o => ({ ...o, equipo: E[o.equipo_id] })),
-      reportes: d.reportes.map(r => ({ ...r, equipo: E[r.equipo_id], orden: d.ordenes.filter(o => o.reporte_anomalia_id === r.id).sort((a, b) => b.id - a.id)[0] || null }))
+      areas,
+      tecnicos: Array.isArray(d.tecnicos) ? d.tecnicos : [],
+      equipos: equipos.map(e => ({ ...e, area: A[String(e.area_id)] || 'Sin área' })),
+      ordenes: ordenes.map(o => ({ ...o, equipo: E[String(o.equipo_id)] || 'Sin equipo' })),
+      reportes: reportes.map(r => ({
+        ...r,
+        equipo: E[String(r.equipo_id)] || 'Sin equipo',
+        orden: porReporte.get(String(r.id)) || null,
+      })),
     };
   }
 
-  // Técnicos = usuarios activos con el rol TECNICO, ya sea en usuario_roles o en usuario_empresa_roles
-  async function tecnicos() {
-    const q = await Promise.all(['usuario_roles', 'usuario_empresa_roles'].map(t =>
-      sb.from(t).select('usuario_id,roles!inner(codigo)').eq('roles.codigo', 'TECNICO')));
-    const ids = [...new Set(q.map(ok).flat().map(x => x.usuario_id))];
-    if (!ids.length) return [];
-    return ok(await sb.from('usuarios').select('id,nombre,apellido').eq('estado', 'activo').in('id', ids).order('nombre'));
+  async function cargar() { return armar(await solicitar('/datos')); }
+  async function asignar(reporte, tecnicoId, prioridad) {
+    return solicitar('/asignaciones', {
+      method: 'POST',
+      body: JSON.stringify({ reporte_id: reporte.id, tecnico_id: tecnicoId, prioridad }),
+    });
   }
-
-  async function cargar() {
-    if (!sb) return armar({ ...M, tecnicos: M.usuarios.filter(u => u.id !== 1) });
-    const [equipos, reportes, ordenes, areas] = (await Promise.all([
-      sb.from('equipos').select('id,area_id,codigo_interno,codigo_qr,nombre,marca,modelo,numero_serie,estado').order('codigo_interno'),
-      sb.from('reportes_anomalias').select('id,equipo_id,titulo,descripcion,prioridad,estado,fecha_reporte').order('fecha_reporte', { ascending: false }),
-      sb.from('ordenes_trabajo').select('id,reporte_anomalia_id,equipo_id,usuario_asignado_id,titulo,prioridad,estado,fecha_inicio,fecha_finalizacion'),
-      sb.from('areas').select('id,nombre').order('nombre')
-    ])).map(ok);
-    return armar({ equipos, reportes, ordenes, areas, tecnicos: await tecnicos() });
-  }
-
-  // Asignar = crear (o actualizar) la orden de trabajo del reporte y pasar el reporte a "en_revision"
-  async function asignar(r, tecnicoId, prioridad) {
-    const o = r.orden && !['completada', 'cancelada'].includes(r.orden.estado) ? r.orden : null;
-    if (!sb) {
-      if (o) Object.assign(M.ordenes.find(x => x.id === o.id), { usuario_asignado_id: tecnicoId, prioridad });
-      else M.ordenes.push({ id: Date.now(), reporte_anomalia_id: r.id, equipo_id: r.equipo_id, usuario_asignado_id: tecnicoId, titulo: r.titulo, prioridad, estado: 'asignada', fecha_inicio: null, fecha_finalizacion: null });
-      M.reportes.find(x => x.id === r.id).estado = 'en_revision';
-      return;
-    }
-    if (o) ok(await sb.from('ordenes_trabajo').update({ usuario_asignado_id: tecnicoId, prioridad }).eq('id', o.id));
-    else ok(await sb.from('ordenes_trabajo').insert({ reporte_anomalia_id: r.id, equipo_id: r.equipo_id, usuario_creador_id: C.USUARIO_ID, usuario_asignado_id: tecnicoId, titulo: r.titulo, descripcion: r.descripcion, tipo: 'correctivo', prioridad, estado: 'asignada' }));
-    ok(await sb.from('reportes_anomalias').update({ estado: 'en_revision' }).eq('id', r.id));
-  }
-
-  // El código QR (UUID) lo genera la base de datos
   async function crearEquipo(f) {
-    const dup = DUP;
-    if (!sb) {
-      if (M.equipos.some(e => e.area_id === f.area_id && e.codigo_interno.toLowerCase() === f.codigo_interno.toLowerCase())) throw new Error(dup);
-      const e = { id: Date.now(), ...f, codigo_qr: crypto.randomUUID(), estado: 'operativo' };
-      M.equipos.push(e); return e;
-    }
-    const r = await sb.from('equipos').insert({ ...f, estado: 'operativo' }).select().single();
-    if (r.error) throw new Error(r.error.code === '23505' ? dup : r.error.message);
-    return r.data;
+    return solicitar('/equipos', { method: 'POST', body: JSON.stringify(f) });
   }
-
   async function editarEquipo(id, f) {
-    if (!sb) {
-      if (M.equipos.some(x => x.id !== id && x.area_id === f.area_id && x.codigo_interno.toLowerCase() === f.codigo_interno.toLowerCase())) throw new Error(DUP);
-      Object.assign(M.equipos.find(x => x.id === id), f); return;
-    }
-    const r = await sb.from('equipos').update(f).eq('id', id).select();
-    if (r.error) throw new Error(r.error.code === '23505' ? DUP : r.error.message);
-    if (!r.data.length) throw new Error('No se pudo guardar: el equipo no existe o no hay permiso para modificarlo.');
+    return solicitar(`/equipos/${encodeURIComponent(id)}`, {
+      method: 'PATCH', body: JSON.stringify(f),
+    });
   }
-
   async function eliminarEquipo(id) {
-    if (!sb) {
-      if (M.reportes.some(r => r.equipo_id === id) || M.ordenes.some(o => o.equipo_id === id)) throw new Error(ASOC);
-      M.equipos.splice(M.equipos.findIndex(x => x.id === id), 1); return;
-    }
-    const r = await sb.from('equipos').delete().eq('id', id).select();
-    if (r.error) throw new Error(r.error.code === '23503' ? ASOC : r.error.message);
-    if (!r.data.length) throw new Error('No se pudo eliminar: el equipo no existe o no hay permiso para borrarlo.');
+    return solicitar(`/equipos/${encodeURIComponent(id)}`, { method: 'DELETE' });
   }
 
-  window.Datos = { cargar, asignar, crearEquipo, editarEquipo, eliminarEquipo, conectado: !!sb };
+  window.Datos = {
+    cargar, asignar, crearEquipo, editarEquipo, eliminarEquipo,
+    conectado: true,
+  };
 })();
